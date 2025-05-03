@@ -1,0 +1,133 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import useAuth from "../../hooks/useAuth";
+import api from "../../services/api";
+import * as C from "./styles";
+import {
+  LayoutDashboard, Box, Users, ShoppingCart,
+  DollarSign, FileText, User, ArrowRightCircle, LogOut, Banknote, Package
+} from "lucide-react";
+
+const Sidebar = () => {
+  const [permissoes, setPermissoes] = useState([]);
+  const [usuario, setUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Estado para controlar se a sidebar está recolhida
+
+  const { signout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
+  const temPermissao = (tela, acao) => {
+    const telaPermissoes = permissoes.find(p => p.tela === tela);
+    return telaPermissoes ? telaPermissoes.permissoes.includes(acao) : false;
+  };
+
+  useEffect(() => {
+    const fetchDados = async () => {
+      setCarregando(true);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setIsLoggedIn(false);
+        setCarregando(false);
+        return;
+      }
+
+      try {
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken?.sub;
+
+        if (!userId) {
+          setIsLoggedIn(false);
+          return;
+        }
+
+        const responseUser = await api.get(`/usuario/id/${userId}`);
+        const user = responseUser.data;
+        setUsuario(user);
+
+        const responsePermissoes = await api.get(`/permissao/telas/${user}`);
+        setPermissoes(responsePermissoes.data);
+
+        const logadoResponse = await api.get(`/usuario/${user}`);
+        setUsuario(logadoResponse.data);
+        console.log(logadoResponse.data)
+
+        setIsLoggedIn(true);
+
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        setPermissoes([]);
+        setIsLoggedIn(false);
+      } finally {
+        setCarregando(false);
+      }
+    };
+
+    fetchDados();
+  }, [navigate]); // Deixe a lista de dependências vazia
+
+
+  const logout = () => {
+    signout();
+    navigate("/", { replace: true });
+  };
+
+  if (carregando || !isLoggedIn) return null;
+
+  return (
+  // Sidebar.js
+
+<C.SidebarContainer collapsed={isSidebarCollapsed}>
+  <C.Logo onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} >
+    <Package size={25} />
+    {!isSidebarCollapsed && <C.LogoText>Flexlog</C.LogoText>}
+  </C.Logo>
+
+  <C.Menu>
+    {permissoes
+      .filter(p => p.permissoes.includes("GET"))
+      .map((p) => (
+        <C.MenuItem
+          key={p.urlTela}
+          onClick={() => navigate(p.urlTela)}
+          isActive={isActive(p.urlTela)}
+          collapsed={isSidebarCollapsed}
+        >
+          {!isSidebarCollapsed ? p.tela.replace("Tela de ", "").trim() : <p />}
+        </C.MenuItem>
+      ))}
+  </C.Menu>
+
+  <C.FooterContainer>
+    {!isSidebarCollapsed && (
+      <C.UserInfo>
+        {usuario ? (
+          <>
+            <C.UserName>{usuario.nomeUsuario}</C.UserName>
+            <C.UserEmail>{usuario.emailUsuario}</C.UserEmail>
+          </>
+        ) : (
+          <p>Carregando usuário...</p>
+        )}
+      </C.UserInfo>
+    )}
+
+    <C.LogoutContainer collapsed={isSidebarCollapsed}>
+      <C.MenuItem onClick={logout} collapsed={isSidebarCollapsed}>
+        <LogOut size={18} style={{ marginRight: isSidebarCollapsed ? 0 : 10 }} />
+        {!isSidebarCollapsed && "Logout"}
+      </C.MenuItem>
+    </C.LogoutContainer>
+  </C.FooterContainer>
+</C.SidebarContainer>
+
+  );
+};
+
+export default Sidebar;
