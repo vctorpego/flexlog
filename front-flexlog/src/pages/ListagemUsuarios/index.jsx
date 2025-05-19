@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Grid from "../../components/Grid";
-import Sidebar from "../../components/Sidebar";
 import ModalExcluir from "../../components/ModalExcluir";
 import { useNavigate } from "react-router-dom";
 import * as C from "./styles";
 import SearchBar from "../../components/SearchBar";
+
 
 const ListagemUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -16,7 +16,12 @@ const ListagemUsuarios = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [userPermissions, setUserPermissions] = useState([]);
   const [permissoesTelaAtual, setPermissoesTelaAtual] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);  // estado do sidebar
   const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
 
   const getToken = () => {
     const token = localStorage.getItem("token");
@@ -54,7 +59,6 @@ const ListagemUsuarios = () => {
     const decoded = jwt_decode(token);
     const userLogin = decoded.sub;
 
-    // Buscar usuários
     axios
       .get("http://localhost:8080/usuario", getRequestConfig())
       .then(({ data }) => {
@@ -64,7 +68,6 @@ const ListagemUsuarios = () => {
         console.error("Erro ao buscar usuários:", err);
       });
 
-    // Buscar permissões do usuário logado
     const fetchUserPermissions = async () => {
       try {
         const response = await axios.get(
@@ -154,7 +157,6 @@ const ListagemUsuarios = () => {
 
   return (
     <C.Container>
-     
       <C.Content>
         <C.Title>Lista de Usuários</C.Title>
 
@@ -168,7 +170,7 @@ const ListagemUsuarios = () => {
               top: "20px",
               right: "20px",
               padding: "10px 20px",
-              backgroundColor: "#007bff",
+              backgroundColor: "#6A6767",
               color: "white",
               border: "none",
               borderRadius: "5px",

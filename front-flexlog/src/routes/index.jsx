@@ -2,28 +2,20 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import Sidebar from "../components/Sidebar";
-
-// Páginas da aplicação com carregamento dinâmico
-
-
+import Layout from "../components/Layout";
 
 const AddUsuario = lazy(() => import("../pages/AddUsuario"));
-
 const EditUsuario = lazy(() => import("../pages/EditUsuario"));
 const Home = lazy(() => import("../pages/Home"));
-
-
 const Signin = lazy(() => import("../pages/Signin"));
 const SwaggerPage = lazy(() => import("../pages/Swagger"));
-
 const ListagemUsuarios = lazy(() => import("../pages/ListagemUsuarios"));
 const NaoAutorizado = lazy(() => import("../pages/NaoAutorizado"));
 const CadastroTela = lazy(() => import("../pages/CadastroTela"));
 
 import PermissaoRoute from "./PermissaoRoute";
 
-// Wrappers de segurança
+// Wrapper de segurança
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth();
   if (!token) {
@@ -33,93 +25,97 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const RoutesApp = () => {
-  const { token, user, signout } = useAuth();
-  const [isSidebarVisible, setSidebarVisible] = useState(!!token);
-
-  useEffect(() => {
-    setSidebarVisible(!!token);
-  }, [token]);
+  const { token } = useAuth();
 
   return (
     <BrowserRouter>
       <Fragment>
-        {isSidebarVisible && <Sidebar user={user} handleLogout={signout} />}
-
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            {/* Home */}
+            {/* Rotas públicas */}
+            <Route path="/auth/login" element={<Signin />} />
+            <Route path="/nao-autorizado" element={<NaoAutorizado />} />
+
+            {/* Rotas protegidas que usam o Layout */}
             <Route
               path="/home"
               element={
                 <ProtectedRoute>
-                  <Home />
+                  <Layout>
+                    <Home />
+                  </Layout>
                 </ProtectedRoute>
               }
-            />       
+            />
 
-            {/* Usuários */}
             <Route
               path="/usuarios"
               element={
                 <ProtectedRoute>
-                  <PermissaoRoute tela="Tela de Usuarios">
-                    <ListagemUsuarios />
-                  </PermissaoRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Usuarios">
+                      <ListagemUsuarios />
+                    </PermissaoRoute>
+                  </Layout>
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/usuarios/adicionar"
               element={
                 <ProtectedRoute>
-                  <PermissaoRoute tela="Tela de Usuarios">
-                    <AddUsuario />
-                  </PermissaoRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Usuarios">
+                      <AddUsuario />
+                    </PermissaoRoute>
+                  </Layout>
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/usuarios/editar/:id"
               element={
                 <ProtectedRoute>
-                  <PermissaoRoute tela="Tela de Usuarios">
-                    <EditUsuario />
-                  </PermissaoRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Usuarios">
+                      <EditUsuario />
+                    </PermissaoRoute>
+                  </Layout>
                 </ProtectedRoute>
               }
             />
 
-            {/* Swagger */}
             <Route
               path="/swagger"
               element={
                 <ProtectedRoute>
-                  <PermissaoRoute tela="Tela de Relatórios">
-                    <SwaggerPage />
-                  </PermissaoRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Relatórios">
+                      <SwaggerPage />
+                    </PermissaoRoute>
+                  </Layout>
                 </ProtectedRoute>
               }
             />
 
-            
             <Route
               path="/telas"
               element={
                 <ProtectedRoute>
-                  <CadastroTela />
+                  <Layout>
+                    <CadastroTela />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
 
-
-            {/* Não autorizado */}
-            <Route path="/nao-autorizado" element={<NaoAutorizado />} />
-
-            {/* Autenticação */}
-            <Route path="/auth/login" element={<Signin />} />
-
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to={token ? "/home" : "/auth/login"} />} />
+            {/* Rota fallback */}
+            <Route
+              path="*"
+              element={<Navigate to={token ? "/home" : "/auth/login"} replace />}
+            />
           </Routes>
         </Suspense>
       </Fragment>

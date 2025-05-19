@@ -1,27 +1,30 @@
 import styled from "styled-components";
 
 export const SidebarContainer = styled.div`
-  width: ${(props) => (props.collapsed ? "60px" : "250px")};
-  height: 100vh;
-  background-color: #007bff; /* Cor de fundo da Sidebar */
-  padding-top: 15px;
+  width: ${(props) => (props.collapsed ? "0" : "250px")};
+  transition: width 0.3s ease;
+  height: calc(100vh - 50px); /* Ajuste aqui */
+  background-color: #FFFFFF; 
+  position: fixed;
+  top: 50px; /* Começa abaixo da navbar */
+  left: 0;
+  z-index: 1000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  position: fixed;
-  transition: width 0.3s ease; /* Animação ao expandir/recolher */
+  padding-top: 15px;
 `;
-
 export const Logo = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
   width: 100%;
-    padding-left: 17px;
-    svg {
-    color: white;
+  padding-left: 17px;
+  svg {
+    color: #2283C8;
   }
-  
 `;
 
 export const FooterContainer = styled.div`
@@ -37,35 +40,31 @@ export const LogoutContainer = styled.div`
   padding-bottom: ${(props) => (props.collapsed ? "10px" : "20px")};
 `;
 
-
 export const LogoText = styled.h1`
-  color: #f0f0f0;
+  color: #2283C8;
   font-size: 24px;
   margin-left: 4px;
   margin-top: 1px;
   white-space: nowrap; /* Evita quebra de linha no nome */
 `;
 
-
-
 export const Menu = styled.div`
   width: 100%;
   margin-bottom: 20px;
 `;
 
-
 export const MenuItem = styled.div`
   display: flex;
   align-items: center;
   padding: 13px;
-  color: white;
+  color: #2283C8;
   font-size: ${(props) => (props.collapsed ? "0.8rem" : "18px")};
   cursor: pointer;
   background-color: ${(props) =>
-    props.isActive && !props.collapsed ? "#0056b3" : "transparent"};
+    props.isActive && !props.collapsed ? "#B3D7F2" : "transparent"}; 
 
   &:hover {
-    background-color: #0069d9;
+    background-color: #B3D7F2;  
   }
 
   svg {
@@ -73,15 +72,11 @@ export const MenuItem = styled.div`
   }
 `;
 
-
-
-
 export const UserInfo = styled.div`
-  padding: 12px 20px 8px 20px; 
+  padding: 12px 20px 8px 20px;
   text-align: left;
-  color: white;
+  color: #2283C8;
 `;
-
 
 export const UserName = styled.h3`
   font-size: 15px;
@@ -95,11 +90,15 @@ export const UserEmail = styled.p`
 `;
 
 export const MainContent = styled.div`
-  margin-left: ${(props) => (props.collapsed ? "60px" : "250px")}; /* Ajusta conforme o tamanho da Sidebar */
-  transition: margin-left 0.3s ease; /* Animação para a transição */
+  margin-left: ${(props) => (props.collapsed ? "60px" : "250px")};
+  transition: margin-left 0.3s ease;
   padding: 20px;
-  width: 100%;
+  width: calc(100% - ${(props) => (props.collapsed ? "60px" : "250px")});
   height: 100vh;
   overflow-y: auto;
+  position: relative;
+  z-index: 1; 
+  margin-top: 15px;
+  padding-left: ${(props) => (props.collapsed ? "60px" : "250px")}; /* Esse ajuste é importante se houver algum problema com o padding */
 `;
 

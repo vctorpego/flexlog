@@ -5,16 +5,15 @@ import useAuth from "../../hooks/useAuth";
 import api from "../../services/api";
 import * as C from "./styles";
 import {
-  LayoutDashboard, Box, Users, ShoppingCart,
-  DollarSign, FileText, User, ArrowRightCircle, LogOut, Banknote, Package
+  Package,
+  LogOut,
 } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed, onToggleSidebar }) => {
   const [permissoes, setPermissoes] = useState([]);
   const [usuario, setUsuario] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Estado para controlar se a sidebar está recolhida
 
   const { signout } = useAuth();
   const navigate = useNavigate();
@@ -22,6 +21,7 @@ const Sidebar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  // Permissão simplificada
   const temPermissao = (tela, acao) => {
     const telaPermissoes = permissoes.find(p => p.tela === tela);
     return telaPermissoes ? telaPermissoes.permissoes.includes(acao) : false;
@@ -56,7 +56,6 @@ const Sidebar = () => {
 
         const logadoResponse = await api.get(`/usuario/${user}`);
         setUsuario(logadoResponse.data);
-        console.log(logadoResponse.data)
 
         setIsLoggedIn(true);
 
@@ -70,8 +69,7 @@ const Sidebar = () => {
     };
 
     fetchDados();
-  }, [navigate]); // Deixe a lista de dependências vazia
-
+  }, [navigate]);
 
   const logout = () => {
     signout();
@@ -81,52 +79,49 @@ const Sidebar = () => {
   if (carregando || !isLoggedIn) return null;
 
   return (
-  // Sidebar.js
+    <C.SidebarContainer collapsed={isCollapsed}>
+      <C.Logo onClick={onToggleSidebar} >
+        <Package size={25} />
+        {!isCollapsed && <C.LogoText>Flexlog</C.LogoText>}
+      </C.Logo>
 
-<C.SidebarContainer collapsed={isSidebarCollapsed}>
-  <C.Logo onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} >
-    <Package size={25} />
-    {!isSidebarCollapsed && <C.LogoText>Flexlog</C.LogoText>}
-  </C.Logo>
+      <C.Menu>
+        {permissoes
+          .filter(p => p.permissoes.includes("GET"))
+          .map((p) => (
+            <C.MenuItem
+              key={p.urlTela}
+              onClick={() => navigate(p.urlTela)}
+              isActive={isActive(p.urlTela)}
+              collapsed={isCollapsed}
+            >
+              {!isCollapsed ? p.tela.replace("Tela de ", "").trim() : <p />}
+            </C.MenuItem>
+          ))}
+      </C.Menu>
 
-  <C.Menu>
-    {permissoes
-      .filter(p => p.permissoes.includes("GET"))
-      .map((p) => (
-        <C.MenuItem
-          key={p.urlTela}
-          onClick={() => navigate(p.urlTela)}
-          isActive={isActive(p.urlTela)}
-          collapsed={isSidebarCollapsed}
-        >
-          {!isSidebarCollapsed ? p.tela.replace("Tela de ", "").trim() : <p />}
-        </C.MenuItem>
-      ))}
-  </C.Menu>
-
-  <C.FooterContainer>
-    {!isSidebarCollapsed && (
-      <C.UserInfo>
-        {usuario ? (
-          <>
-            <C.UserName>{usuario.nomeUsuario}</C.UserName>
-            <C.UserEmail>{usuario.emailUsuario}</C.UserEmail>
-          </>
-        ) : (
-          <p>Carregando usuário...</p>
+      <C.FooterContainer>
+        {!isCollapsed && (
+          <C.UserInfo>
+            {usuario ? (
+              <>
+                <C.UserName>{usuario.nomeUsuario}</C.UserName>
+                <C.UserEmail>{usuario.emailUsuario}</C.UserEmail>
+              </>
+            ) : (
+              <p>Carregando usuário...</p>
+            )}
+          </C.UserInfo>
         )}
-      </C.UserInfo>
-    )}
 
-    <C.LogoutContainer collapsed={isSidebarCollapsed}>
-      <C.MenuItem onClick={logout} collapsed={isSidebarCollapsed}>
-        <LogOut size={18} style={{ marginRight: isSidebarCollapsed ? 0 : 10 }} />
-        {!isSidebarCollapsed && "Logout"}
-      </C.MenuItem>
-    </C.LogoutContainer>
-  </C.FooterContainer>
-</C.SidebarContainer>
-
+        <C.LogoutContainer collapsed={isCollapsed}>
+          <C.MenuItem onClick={logout} collapsed={isCollapsed}>
+            <LogOut size={18} style={{ marginRight: isCollapsed ? 0 : 10 }} />
+            {!isCollapsed && "Logout"}
+          </C.MenuItem>
+        </C.LogoutContainer>
+      </C.FooterContainer>
+    </C.SidebarContainer>
   );
 };
 

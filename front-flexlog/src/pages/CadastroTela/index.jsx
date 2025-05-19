@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar"; // Adicionando a Sidebar
 import { Container, Form, Input, Button } from './styles'; // ajuste se necessário
 
 const CadastroTela = () => {
@@ -125,24 +126,26 @@ const CadastroTela = () => {
   }
 
   return (
-    <Container>
-      <h2>Cadastro de Tela</h2>
-      <Form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          placeholder="Nome da Tela"
-          value={nomeTela}
-          onChange={(e) => setNomeTela(e.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="URL da Tela"
-          value={urlTela}
-          onChange={(e) => setUrlTela(e.target.value)}
-        />
-        <Button type="submit">Cadastrar</Button>
-      </Form>
-    </Container>
+    <div style={{ display: "flex" }}>
+      <Container style={{ marginLeft: "250px", width: "100%" }}> {/* Ajustando o Container para o layout com Sidebar */}
+        <h2>Cadastro de Tela</h2>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            placeholder="Nome da Tela"
+            value={nomeTela}
+            onChange={(e) => setNomeTela(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="URL da Tela"
+            value={urlTela}
+            onChange={(e) => setUrlTela(e.target.value)}
+          />
+          <Button type="submit">Cadastrar</Button>
+        </Form>
+      </Container>
+    </div>
   );
 };
 

@@ -1,15 +1,28 @@
 import styled from 'styled-components';
 
+// Container para o layout flexível
 export const Container = styled.div`
   display: flex;
-  height: 100vh; /* Garante que a página ocupe toda a altura da tela */
+  height: 100vh;
+  transition: all 0.3s ease;
 `;
 
+
+// Conteúdo que ocupa o restante da tela
 export const Content = styled.div`
-  margin-left: 250px; /* Sidebar tem 250px de largura */
+  flex-grow: 1; /* Faz com que o conteúdo ocupe o espaço restante */
+  margin-left: ${(props) => (props.collapsed ? '70px' : '250px')}; /* Ajusta o conteúdo dependendo do estado da Sidebar */
   padding: 20px;
-  width: 100%;
+  height: 100vh;
   overflow: auto;
+  transition: margin-left 0.3s ease, width 0.3s ease; /* Animação suave */
+
+  /* Para dispositivos menores, a sidebar desaparece e o conteúdo ocupa toda a tela */
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100%;
+    padding: 10px;
+  }
 `;
 
 export const Title = styled.h2`
@@ -39,13 +52,17 @@ export const TableHeader = styled.thead`
 
 export const TableRow = styled.tr`
   border-bottom: 1px solid #ddd;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
 `;
 
 export const TableCell = styled.td`
   padding: 12px;
   text-align: left;
   font-size: 16px;
-  color: #555;
+  color: #222;
 `;
 
 export const TableHeaderCell = styled.th`
@@ -57,15 +74,17 @@ export const TableHeaderCell = styled.th`
 `;
 
 export const ButtonExcluir = styled.button`
-  background-color: #f44336;
+  background-color: #ff4d4f;
   color: #fff;
   border: none;
-  padding: 8px 16px;
+  padding: 6px 12px;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+
   &:hover {
-    background-color: #d32f2f;
+    background-color: #ff7875;
   }
 `;
 
@@ -94,23 +113,20 @@ export const ModalButton = styled.button`
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
-  margin: 10px 0;
+  margin: 10px 5px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+
   &:hover {
     background-color: #45a049;
   }
 `;
 
-export const ModalCloseButton = styled.button`
+export const ModalCloseButton = styled(ModalButton)`
   background-color: #ccc;
-  color: #fff;
-  padding: 8px 16px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  color: #333;
+
   &:hover {
     background-color: #bbb;
   }

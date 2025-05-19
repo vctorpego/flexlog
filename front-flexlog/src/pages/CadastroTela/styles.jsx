@@ -26,7 +26,7 @@ export const Input = styled.input`
 export const Button = styled.button`
   padding: 10px;
   border: none;
-  background-color: #007bff;
+  background-color: #2283C8;
   color: white;
   font-weight: bold;
   border-radius: 6px;
@@ -34,6 +34,6 @@ export const Button = styled.button`
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #007bff;
+    background-color: red;
   }
 `;
