@@ -2,7 +2,7 @@ package br.bom.flexlog.academic.entity;
 
 import jakarta.persistence.*;
 
-@Entity
+
 public class Entregador  extends Usuario{
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)

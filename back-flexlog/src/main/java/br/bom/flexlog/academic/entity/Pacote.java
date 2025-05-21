@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
+
 public class Pacote  implements Serializable {
 
     @Id

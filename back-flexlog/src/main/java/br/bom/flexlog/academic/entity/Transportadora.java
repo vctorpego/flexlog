@@ -3,8 +3,7 @@ package br.bom.flexlog.academic.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-@Entity
-@Table( name = "transportadora")
+
 public class Transportadora implements Serializable {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
