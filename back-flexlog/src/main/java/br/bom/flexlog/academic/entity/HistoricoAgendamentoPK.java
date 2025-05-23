@@ -1,5 +1,6 @@
 package br.bom.flexlog.academic.entity;
 
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 

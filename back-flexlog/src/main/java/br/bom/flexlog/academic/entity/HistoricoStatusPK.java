@@ -1,41 +1,50 @@
 package br.bom.flexlog.academic.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class HistoricoStatusPK  implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "idPacote")
-    private Pacote pacote;
+@Embeddable
+public class HistoricoStatusPK implements Serializable {
 
-    @ManyToOne
-    @JoinColumn(name = "idStatusPacote")
-    private StatusPacote status;
+    private int idPacote;
+    private int idStatusPacote;
 
-    public HistoricoStatusPK(StatusPacote status, Pacote pacote) {
-        this.status = status;
-        this.pacote = pacote;
+    public HistoricoStatusPK() {}
+
+    public HistoricoStatusPK(int idPacote, int idStatusPacote) {
+        this.idPacote = idPacote;
+        this.idStatusPacote = idStatusPacote;
     }
 
-    public HistoricoStatusPK() {
+    public int getIdPacote() {
+        return idPacote;
     }
 
-    public Pacote getPacote() {
-        return pacote;
+    public void setIdPacote(int idPacote) {
+        this.idPacote = idPacote;
     }
 
-    public void setPacote(Pacote pacote) {
-        this.pacote = pacote;
+    public int getIdStatusPacote() {
+        return idStatusPacote;
     }
 
-    public StatusPacote getStatus() {
-        return status;
+    public void setIdStatusPacote(int idStatusPacote) {
+        this.idStatusPacote = idStatusPacote;
     }
 
-    public void setStatus(StatusPacote status) {
-        this.status = status;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HistoricoStatusPK)) return false;
+        HistoricoStatusPK that = (HistoricoStatusPK) o;
+        return idPacote == that.idPacote &&
+                idStatusPacote == that.idStatusPacote;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPacote, idStatusPacote);
     }
 }

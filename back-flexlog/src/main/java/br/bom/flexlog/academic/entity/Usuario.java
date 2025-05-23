@@ -10,39 +10,49 @@ import java.util.List;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario implements Serializable{
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.INTEGER)
+public class Usuario implements Serializable {
+
     @Id
-    @GeneratedValue ( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String emailUsuario;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String telefoneUsuario;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String nomeUsuario;
 
     @Column(nullable = false, unique = true)
     private String login;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String senhaUsuario;
 
     @Column(name = "is_super_adm", nullable = false)
-    private Boolean isSuperAdm;
+    private Boolean isSuperAdm = false;
 
     @Column(name = "is_adm", nullable = false)
-    private Boolean isAdm;
-
+    private Boolean isAdm = false;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference // Evita a serialização repetitiva
+    @JsonBackReference // evita referência cíclica na serialização JSON
     private List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario;
 
+    // Construtores
+    public Usuario() {}
 
-    public Usuario(int idUsuario, List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario, String senhaUsuario, String login, String nomeUsuario, String emailUsuario, String telefoneUsuario) {
+    public Usuario(UsuarioDTO usuarioDTO){
+        BeanUtils.copyProperties(usuarioDTO, this);
+    }
+
+    public Usuario(int idUsuario, List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario,
+                   String senhaUsuario, String login, String nomeUsuario,
+                   String emailUsuario, String telefoneUsuario) {
         this.idUsuario = idUsuario;
         this.usuarioPermissaoTelaListUsuario = usuarioPermissaoTelaListUsuario;
         this.senhaUsuario = senhaUsuario;
@@ -52,22 +62,7 @@ public class Usuario implements Serializable{
         this.telefoneUsuario = telefoneUsuario;
     }
 
-    public Usuario(UsuarioDTO usuario){
-        BeanUtils.copyProperties(usuario, this);
-    }
-
-    public Usuario(){
-
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
+    // Getters e setters
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -100,12 +95,12 @@ public class Usuario implements Serializable{
         this.nomeUsuario = nomeUsuario;
     }
 
-    public List<UsuarioPermissaoTela> getUsuarioPermissaoTelaListUsuario() {
-        return usuarioPermissaoTelaListUsuario;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsuarioPermissaoTelaListUsuario(List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario) {
-        this.usuarioPermissaoTelaListUsuario = usuarioPermissaoTelaListUsuario;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getSenhaUsuario() {
@@ -116,9 +111,12 @@ public class Usuario implements Serializable{
         this.senhaUsuario = senhaUsuario;
     }
 
-    public void login(){
+    public Boolean getIsSuperAdm() {
+        return isSuperAdm;
+    }
 
-
+    public void setIsSuperAdm(Boolean isSuperAdm) {
+        this.isSuperAdm = isSuperAdm;
     }
 
     public Boolean getIsAdm() {
@@ -129,16 +127,20 @@ public class Usuario implements Serializable{
         this.isAdm = isAdm;
     }
 
-    public Boolean getIsSuperAdm() {
-        return isSuperAdm;
+    public List<UsuarioPermissaoTela> getUsuarioPermissaoTelaListUsuario() {
+        return usuarioPermissaoTelaListUsuario;
     }
 
-    public void setIsSuperAdm(Boolean isSuperAdm) {
-        this.isSuperAdm = isSuperAdm;
+    public void setUsuarioPermissaoTelaListUsuario(List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario) {
+        this.usuarioPermissaoTelaListUsuario = usuarioPermissaoTelaListUsuario;
     }
 
+    // Métodos vazios podem ser removidos ou implementados futuramente
+    public void login() {
+        // lógica de login
+    }
 
-    public void logout(){
-
+    public void logout() {
+        // lógica de logout
     }
 }

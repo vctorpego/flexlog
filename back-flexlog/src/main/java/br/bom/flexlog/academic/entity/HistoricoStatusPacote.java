@@ -6,38 +6,63 @@ import java.io.Serializable;
 import java.util.Date;
 
 
+@Entity
 public class HistoricoStatusPacote  implements Serializable {
 
     @EmbeddedId
-    private HistoricoStatusPK chaveComposta;
+    private HistoricoStatusPK id;
 
-    @Temporal(value = TemporalType.DATE)
-    @Column(nullable = false, updatable = false)
-    private Date dtModificacao;
+    @ManyToOne
+    @MapsId("idPacote") // vincula ao campo da chave composta
+    @JoinColumn(name = "idPacote")
+    private Pacote pacote;
 
-    public HistoricoStatusPacote(Date dtModificacao, HistoricoStatusPK chaveComposta) {
-        this.dtModificacao = dtModificacao;
-        this.chaveComposta = chaveComposta;
+    @ManyToOne
+    @MapsId("idStatusPacote")
+    @JoinColumn(name = "idStatusPacote")
+    private StatusPacote status;
+
+    @Column(nullable = false)
+    private Date dataStatus;
+
+    public HistoricoStatusPacote() {}
+
+    public HistoricoStatusPacote(Pacote pacote, StatusPacote status, Date dataStatus) {
+        this.id = new HistoricoStatusPK(pacote.getIdPacote(), status.getIdStatusPacote());
+        this.pacote = pacote;
+        this.status = status;
+        this.dataStatus = dataStatus;
     }
 
-    public HistoricoStatusPacote() {
-
+    public HistoricoStatusPK getId() {
+        return id;
     }
 
-
-    public HistoricoStatusPK getChaveComposta() {
-        return chaveComposta;
+    public void setId(HistoricoStatusPK id) {
+        this.id = id;
     }
 
-    public void setChaveComposta(HistoricoStatusPK chaveComposta) {
-        this.chaveComposta = chaveComposta;
+    public Pacote getPacote() {
+        return pacote;
     }
 
-    public Date getDtModificacao() {
-        return dtModificacao;
+    public void setPacote(Pacote pacote) {
+        this.pacote = pacote;
     }
 
-    public void setDtModificacao(Date dtModificacao) {
-        this.dtModificacao = dtModificacao;
+    public StatusPacote getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusPacote status) {
+        this.status = status;
+    }
+
+    public Date getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(Date dataStatus) {
+        this.dataStatus = dataStatus;
     }
 }
