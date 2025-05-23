@@ -92,7 +92,7 @@ const RoutesApp = () => {
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <PermissaoRoute tela="Tela de Relatórios">
+                    <PermissaoRoute tela="Tela de Tela">
                       <SwaggerPage />
                     </PermissaoRoute>
                   </Layout>
