@@ -1,6 +1,10 @@
 package br.bom.flexlog.academic.entity;
 
+import br.bom.flexlog.academic.dto.EntregadorDTO;
+import br.bom.flexlog.academic.dto.UsuarioDTO;
 import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +22,21 @@ public class Entregador extends Usuario {
         super();
     }
 
-    public Entregador(String cnh) {
-        super();
-        this.cnh = cnh;
+
+
+    public Entregador(EntregadorDTO dto) {
+        this.setIdUsuario(dto.getIdUsuario());
+        this.setNomeUsuario(dto.getNomeUsuario());
+        this.setEmailUsuario(dto.getEmailUsuario());
+        this.setLogin(dto.getLogin());
+        this.setSenhaUsuario(dto.getSenhaUsuario());
+        this.setCnh(dto.getCnh());
+        this.setTelefoneUsuario(dto.getTelefoneUsuario());
+        this.setIsAdm(dto.getIsAdm());
     }
+
+
+
 
     public String getCnh() {
         return cnh;

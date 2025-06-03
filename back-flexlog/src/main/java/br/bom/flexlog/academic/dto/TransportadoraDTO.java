@@ -1,72 +1,55 @@
-package br.bom.flexlog.academic.entity;
+package br.bom.flexlog.academic.dto;
 
-import br.bom.flexlog.academic.dto.TransportadoraDTO;
-import jakarta.persistence.*;
+import br.bom.flexlog.academic.entity.Entregador;
+import br.bom.flexlog.academic.entity.Transportadora;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-public class Transportadora implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TransportadoraDTO {
     private int idTransportadora;
-
-    @Column
     private String nomeSocial;
-
-    @Column(unique = true)
     private String cnpj;
 
-    // Campos de endereço
-    @Column
     private String logradouro;
-
-    @Column
     private String numero;
 
-    @Column
     private String complemento;
-
-    @Column
     private String bairro;
-
-    @Column
     private String cidade;
-
-    @Column
     private String estado;
-
-    @Column
     private String cep;
 
-    @OneToMany(mappedBy = "transportadora", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pacote> pacotes = new ArrayList<>();
-
-    public Transportadora() {
+    public TransportadoraDTO() {
     }
 
-    public Transportadora(String nomeSocial, String cnpj) {
+    public TransportadoraDTO(int idTransportadora, String nomeSocial, String cnpj,
+                             String logradouro, String numero, String complemento,
+                             String bairro, String cidade, String estado, String cep) {
+        this.idTransportadora = idTransportadora;
         this.nomeSocial = nomeSocial;
         this.cnpj = cnpj;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
     }
 
-    public Transportadora(TransportadoraDTO dto) {
-        this.idTransportadora = dto.getIdTransportadora();
-        this.nomeSocial = dto.getNomeSocial();
-        this.cnpj = dto.getCnpj();
+    public TransportadoraDTO(Transportadora transportadora) {
+        this.idTransportadora = transportadora.getIdTransportadora();
+        this.nomeSocial = transportadora.getNomeSocial();
+        this.cnpj = transportadora.getCnpj();
 
-        this.logradouro = dto.getLogradouro();
-        this.numero = dto.getNumero();
-        this.complemento = dto.getComplemento();
-        this.bairro = dto.getBairro();
-        this.cidade = dto.getCidade();
-        this.estado = dto.getEstado();
-        this.cep = dto.getCep();
+        this.logradouro = transportadora.getLogradouro();
+        this.numero = transportadora.getNumero();
+        this.complemento = transportadora.getComplemento();
+        this.bairro = transportadora.getBairro();
+        this.cidade = transportadora.getCidade();
+        this.estado = transportadora.getEstado();
+        this.cep = transportadora.getCep();
     }
 
-    // Getters e setters
+
 
     public int getIdTransportadora() {
         return idTransportadora;
@@ -146,13 +129,5 @@ public class Transportadora implements Serializable {
 
     public void setCep(String cep) {
         this.cep = cep;
-    }
-
-    public List<Pacote> getPacotes() {
-        return pacotes;
-    }
-
-    public void setPacotes(List<Pacote> pacotes) {
-        this.pacotes = pacotes;
     }
 }

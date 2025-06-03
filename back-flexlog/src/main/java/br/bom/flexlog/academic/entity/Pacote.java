@@ -43,6 +43,9 @@ public class Pacote implements Serializable {
     @OneToMany(mappedBy = "pacote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoStatusPacote> historicosStatus = new ArrayList<>();
 
+    @OneToMany(mappedBy = "pacote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HistoricoAgendamentoPacote> historicosAgendamento = new ArrayList<>();
+
 
     public Pacote() {}
 
@@ -145,5 +148,13 @@ public class Pacote implements Serializable {
 
     public void setTentativas(List<TentativaEntrega> tentativas) {
         this.tentativas = tentativas;
+    }
+
+    public List<HistoricoAgendamentoPacote> getHistoricosAgendamento() {
+        return historicosAgendamento;
+    }
+
+    public void setHistoricosAgendamento(List<HistoricoAgendamentoPacote> historicosAgendamento) {
+        this.historicosAgendamento = historicosAgendamento;
     }
 }

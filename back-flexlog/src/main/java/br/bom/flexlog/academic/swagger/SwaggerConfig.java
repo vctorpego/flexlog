@@ -14,9 +14,9 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API TechMeal")
+                        .title("API Flexlog")
                         .version("1.0")
-                        .description("Documentação da API TechMeal"))
+                        .description("Documentação da API Flexlog"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Token")) // Aplica a segurança global
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("Bearer Token",

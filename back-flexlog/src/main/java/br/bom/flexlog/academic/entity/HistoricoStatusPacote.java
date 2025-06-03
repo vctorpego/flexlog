@@ -14,15 +14,16 @@ public class HistoricoStatusPacote  implements Serializable {
 
     @ManyToOne
     @MapsId("idPacote") // vincula ao campo da chave composta
-    @JoinColumn(name = "idPacote")
+    @JoinColumn(name = "id_pacote")
     private Pacote pacote;
 
     @ManyToOne
     @MapsId("idStatusPacote")
-    @JoinColumn(name = "idStatusPacote")
+    @JoinColumn(name = "id_status_pacote")
     private StatusPacote status;
 
-    @Column(nullable = false)
+    @Temporal(value = TemporalType.DATE)
+    @Column(nullable = false, updatable = false)
     private Date dataStatus;
 
     public HistoricoStatusPacote() {}

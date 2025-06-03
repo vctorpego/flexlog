@@ -1,42 +1,55 @@
 package br.bom.flexlog.academic.entity;
 
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
+
 
 import java.io.Serializable;
+import java.util.Objects;
 
+@Embeddable
 public class HistoricoAgendamentoPK implements Serializable {
 
-    @ManyToOne
-    @JoinColumn(name = "idPacote")
-    private Pacote pacote;
 
-    @ManyToOne
-    @JoinColumn(name = "idStatusAgendamento")
-    private StatusAgendamento status;
+    private int idPacote;
+    private int idStatusAgendamento;
 
-    public HistoricoAgendamentoPK(Pacote pacote, StatusAgendamento status) {
-        this.pacote = pacote;
-        this.status = status;
+
+    public HistoricoAgendamentoPK(int idStatusAgendamento, int idPacote) {
+        this.idStatusAgendamento = idStatusAgendamento;
+        this.idPacote = idPacote;
     }
 
     public HistoricoAgendamentoPK() {
+
     }
 
-    public Pacote getPacote() {
-        return pacote;
+    public int getIdPacote() {
+        return idPacote;
     }
 
-    public void setPacote(Pacote pacote) {
-        this.pacote = pacote;
+    public void setIdPacote(int idPacote) {
+        this.idPacote = idPacote;
     }
 
-    public StatusAgendamento getStatus() {
-        return status;
+    public int getIdStatusAgendamento() {
+        return idStatusAgendamento;
     }
 
-    public void setStatus(StatusAgendamento status) {
-        this.status = status;
+    public void setIdStatusAgendamento(int idStatusAgendamento) {
+        this.idStatusAgendamento = idStatusAgendamento;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HistoricoAgendamentoPK that = (HistoricoAgendamentoPK) o;
+        return idPacote == that.idPacote && idStatusAgendamento == that.idStatusAgendamento;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPacote, idStatusAgendamento);
     }
 }
