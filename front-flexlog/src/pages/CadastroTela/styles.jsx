@@ -4,10 +4,14 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
+  width: 100%;  /* Aqui você pode ajustar para o que precisar */
+  max-width: 1800px; /* opcional, para limitar largura */
   text-align: center;
   flex-direction: column;
+
 `;
+
 
 export const Form = styled.form`
   display: flex;

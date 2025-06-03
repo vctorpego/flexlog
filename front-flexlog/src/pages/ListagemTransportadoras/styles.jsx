@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   height: 100vh;
   transition: all 0.3s ease;
+
 `;
 
 
@@ -45,7 +46,7 @@ export const AddButton = styled.button`
 export const Title = styled.h2`
   font-size: 24px;
   font-weight: bold;
-  color: #003366;;
+  color: #003366;
   margin-bottom: 20px;
 `;
 

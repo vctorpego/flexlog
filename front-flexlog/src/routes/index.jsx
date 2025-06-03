@@ -6,12 +6,17 @@ import Layout from "../components/Layout";
 
 const AddUsuario = lazy(() => import("../pages/AddUsuario"));
 const EditUsuario = lazy(() => import("../pages/EditUsuario"));
+const EditTransp = lazy(() => import("../pages/EditTransportadora"));
 const Home = lazy(() => import("../pages/Home"));
 const Signin = lazy(() => import("../pages/Signin"));
 const SwaggerPage = lazy(() => import("../pages/Swagger"));
 const ListagemUsuarios = lazy(() => import("../pages/ListagemUsuarios"));
 const NaoAutorizado = lazy(() => import("../pages/NaoAutorizado"));
 const CadastroTela = lazy(() => import("../pages/CadastroTela"));
+const ListTransp = lazy(() => import("../pages/ListagemTransportadoras"));
+const AddTransp = lazy(() => import("../pages/AddTransportadora"));
+
+
 
 import PermissaoRoute from "./PermissaoRoute";
 
@@ -99,6 +104,44 @@ const RoutesApp = () => {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/transportadoras"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Transportadoras">
+                      <ListTransp />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/transportadoras/adicionar"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Transportadoras">
+                      <AddTransp />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+                        <Route
+              path="/transportadoras/editar/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Transportadoras">
+                      <EditTransp />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
 
             <Route
               path="/telas"

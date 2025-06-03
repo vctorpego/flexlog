@@ -52,10 +52,10 @@ const Layout = ({ children }) => {
                     height: "100vh",
                     marginLeft:
                         !isMobile && (isSidebarCollapsed ? `${collapsedWidth}px` : `${sidebarWidth}px`),
-                    // Se for mobile (sidebar fixed), não adiciona marginLeft, para evitar espaço em branco
                     transition: "margin-left 0.3s",
                 }}
             >
+
                 {/* Div que contém a navbar */}
                 <div style={{ height: "50px", flexShrink: 0 }}>
                     <Navbar
@@ -68,9 +68,11 @@ const Layout = ({ children }) => {
                         flexGrow: 1,
                         display: "flex",
                         flexDirection: "column",
-                        height: "100vh",
-                        marginLeft: isMobile ?0 : isSidebarCollapsed ? collapsedWidth : sidebarWidth,
+                        padding: "16px", // ou mais se quiser
+                        boxSizing: "border-box",
+                        marginLeft: isMobile ? 0 : isSidebarCollapsed ? collapsedWidth : sidebarWidth,
                         transition: "margin-left 0.3s",
+                        overflowY: "auto", // opcional se o conteúdo for maior que a tela
 
 
 

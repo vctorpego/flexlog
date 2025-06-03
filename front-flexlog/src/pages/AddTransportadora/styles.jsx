@@ -16,8 +16,8 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: 28px;
-  color: #003366; /* azul escuro */
+  font-size: 28px; 
+  color: #003366; /* azul escuro */ 
   margin-bottom: 24px;
 `;
 

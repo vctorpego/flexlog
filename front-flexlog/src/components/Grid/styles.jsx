@@ -14,7 +14,7 @@ export const TableHeader = styled.th`
   padding: 12px 15px;
   text-align: left;
   font-weight: bold;
-  color: #333;
+  color: #003366;
   border: 1px solid #ddd;
   font-size: 14px;
 `;
@@ -26,7 +26,7 @@ export const TableCell = styled.td`
   vertical-align: middle;
   border: 1px solid #ddd;
   font-size: 14px;
-  color: #555;
+  color: #003366;
 `;
 
 // Estilo para o botão de ação

@@ -17,11 +17,15 @@ const EditUsuario = () => {
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [login, setLogin] = useState("");
+  const [cnh, setCnh] = useState("");
+  const [isEntregador, setIsEntregador] = useState(false);
   const [permissoes, setPermissoes] = useState({});
   const [telas, setTelas] = useState([]);
   const [hasPermission, setHasPermission] = useState(false);
   const [isSuperAdm, setIsSuperAdm] = useState(false);
   const [adminChecked, setAdminChecked] = useState(false);
+
+
   const navigate = useNavigate();
 
   const getToken = () => {
@@ -61,24 +65,29 @@ const EditUsuario = () => {
 
     const fetchUserData = async () => {
       try {
+        // Pega ID do usuário logado para verificar permissões
         const userResponse = await axios.get(
           `http://localhost:8080/usuario/id/${userLogin}`,
           getRequestConfig()
         );
 
         const currentUserId = userResponse.data;
+
+        // Pega permissões do usuário logado
         const permissionsResponse = await axios.get(
           `http://localhost:8080/permissao/telas/${currentUserId}`,
           getRequestConfig()
         );
+
+        // Dados do usuário logado para saber se é super admin
         const logadoResponse = await axios.get(
           `http://localhost:8080/usuario/${currentUserId}`,
           getRequestConfig()
         );
 
-        console.log("Esse é o usuario a ser editado", logadoResponse.data);
         setIsSuperAdm(logadoResponse.data.isSuperAdm);
 
+        // Verifica se o usuário tem permissão PUT na tela de usuários
         const telaUsuarios = permissionsResponse.data.find(
           (perm) => perm.tela === "Tela de Usuarios"
         );
@@ -91,20 +100,44 @@ const EditUsuario = () => {
           return;
         }
 
-        // Dados do usuário sendo editado
+        // Dados do usuário que está sendo editado
         const userToEditResponse = await axios.get(
           `http://localhost:8080/usuario/${id}`,
           getRequestConfig()
         );
 
-        const { nomeUsuario, emailUsuario, telefoneUsuario, login, isAdm } = userToEditResponse.data;
+        const {
+          nomeUsuario,
+          emailUsuario,
+          telefoneUsuario,
+          login,
+          isAdm,
+        } = userToEditResponse.data;
+
         setNome(nomeUsuario);
         setEmail(emailUsuario);
         setTelefone(telefoneUsuario);
         setLogin(login);
-        setAdminChecked(isAdm); // define se o checkbox de administrador deve estar marcado
+        setAdminChecked(isAdm);
 
-        // Permissões atuais do usuário
+        // Buscar dados do entregador pelo ID (caso exista)
+        try {
+          const entregadorResponse = await axios.get(
+            `http://localhost:8080/entregador/${id}`,
+            getRequestConfig()
+          );
+          const { cnh } = entregadorResponse.data;
+          setCnh(cnh || "");
+          setIsEntregador(!!cnh);
+
+        } catch (error) {
+          setCnh("");
+          setIsEntregador(false);
+
+        }
+
+
+        // Permissões atuais do usuário sendo editado
         const permissoesUsuario = await axios.get(
           `http://localhost:8080/permissao/telas/${id}`,
           getRequestConfig()
@@ -120,10 +153,12 @@ const EditUsuario = () => {
           };
         });
 
+        // Buscar todas as telas para mostrar as permissões
         const telasResponse = await axios.get("http://localhost:8080/tela", getRequestConfig());
         const todasAsTelas = telasResponse.data;
         setTelas(todasAsTelas);
 
+        // Preencher permissões para telas que não tem no usuário (false)
         todasAsTelas.forEach((tela) => {
           if (!permissoesObj[tela.nomeTela]) {
             permissoesObj[tela.nomeTela] = {
@@ -163,11 +198,11 @@ const EditUsuario = () => {
     const novoValor = !adminChecked;
     setAdminChecked(novoValor);
 
-    // Se marcar "Administrador", marque todos os checkboxes
     if (novoValor) {
+      // Marca todas as permissões se admin for marcado
       const novasPermissoes = {};
       telas.forEach((tela) => {
-        if (tela.nomeTela === "Tela de Tela") return; // Ignora a tela de controle
+        if (tela.nomeTela === "Tela de Tela") return;
         novasPermissoes[tela.nomeTela] = {
           adicionar: true,
           editar: true,
@@ -177,7 +212,6 @@ const EditUsuario = () => {
       });
       setPermissoes(novasPermissoes);
     } else {
-      // Caso contrário, desmarque todos os checkboxes
       toggleAllCheckboxes(false);
     }
   };
@@ -204,24 +238,47 @@ const EditUsuario = () => {
     if (!token) return;
 
     try {
-      const updateResponse = await axios.put(
-        `http://localhost:8080/usuario/${id}`,
-        {
-          nomeUsuario: nome,
-          emailUsuario: email,
-          telefoneUsuario: telefone,
-          login,
-          isAdm: adminChecked,
-        },
-        getRequestConfig()
-      );
+      // Atualiza dados do usuário
+      let updateResponse;
+
+      if (isEntregador) {
+
+        updateResponse = await axios.put(
+          `http://localhost:8080/entregador/alterar/${id}`,
+          {
+            nomeUsuario: nome,
+            emailUsuario: email,
+            telefoneUsuario: telefone,
+            login: login,
+            cnh: cnh,
+            isAdm: adminChecked
+          },
+          getRequestConfig()
+        );
+      } else {
+        updateResponse = await axios.put(
+          `http://localhost:8080/usuario/${id}`,
+          {
+            nomeUsuario: nome,
+            emailUsuario: email,
+            telefoneUsuario: telefone,
+            login: login,
+            isAdm: adminChecked,
+          },
+          getRequestConfig()
+        );
+      }
+
+
 
       if (updateResponse.status === 200) {
+        // Apaga permissões antigas
         await axios.delete(`http://localhost:8080/usuario/tela/${id}`, getRequestConfig());
 
         const usuarioId = updateResponse.data.idUsuario;
         const permissaoRequests = [];
 
+        // Envia permissões atualizadas
         for (const [nomeTela, permissoesTela] of Object.entries(permissoes)) {
           const telaId = telas.find((t) => t.nomeTela === nomeTela)?.idTela;
           if (!telaId) continue;
@@ -248,7 +305,10 @@ const EditUsuario = () => {
         }
 
         await Promise.all(permissaoRequests);
+        alert("Usuário atualizado com sucesso!");
         navigate("/usuarios");
+      } else {
+        alert("Erro ao atualizar usuário.");
       }
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
@@ -264,10 +324,50 @@ const EditUsuario = () => {
     <C.Container>
       <C.Title>Editar Usuário</C.Title>
       <C.Form onSubmit={handleSubmit}>
-        <C.Input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-        <C.Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <C.Input type="text" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-        <C.Input type="text" placeholder="Login" value={login} onChange={(e) => setLogin(e.target.value)} />
+        <C.Input
+          type="text"
+          placeholder="Nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+        />
+        <C.Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <C.Input
+          type="text"
+          placeholder="Telefone"
+          value={telefone}
+          onChange={(e) => setTelefone(e.target.value)}
+        />
+        <C.Input
+          type="text"
+          placeholder="Login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+        />
+        <C.Input
+          type="text"
+          placeholder="CNH"
+          value={cnh}
+          onChange={(e) => setCnh(e.target.value)}
+          disabled={!isEntregador}
+        />
+
+        <C.CheckboxContainer>
+          <label>
+            <input
+              type="checkbox"
+              checked={isEntregador}
+              onChange={(e) => setIsEntregador(e.target.checked)}
+              disabled={true}
+            />
+            Entregador
+          </label>
+        </C.CheckboxContainer>
+
         {isSuperAdm && (
           <C.CheckboxContainer>
             <label>
@@ -284,22 +384,46 @@ const EditUsuario = () => {
         {telas
           .filter((tela) => tela.nomeTela !== "Tela de Tela")
           .map((tela) => (
-            <C.CheckboxContainer key={tela.idTela}>
-              <strong>{tela.nomeTela}</strong>
-              {Object.keys(acoes).map((acao) => (
-                <label key={acao}>
+            <div key={tela.idTela}>
+              <h3>{tela.nomeTela}</h3>
+              <C.CheckboxContainer>
+                <label>
                   <input
                     type="checkbox"
-                    checked={permissoes[tela.nomeTela]?.[acao] || false}
-                    onChange={() => handleCheckboxChange(tela.nomeTela, acao)}
+                    checked={permissoes[tela.nomeTela]?.adicionar || false}
+                    onChange={() => handleCheckboxChange(tela.nomeTela, "adicionar")}
                   />
-                  {acao}
+                  Adicionar
                 </label>
-              ))}
-            </C.CheckboxContainer>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={permissoes[tela.nomeTela]?.editar || false}
+                    onChange={() => handleCheckboxChange(tela.nomeTela, "editar")}
+                  />
+                  Editar
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={permissoes[tela.nomeTela]?.excluir || false}
+                    onChange={() => handleCheckboxChange(tela.nomeTela, "excluir")}
+                  />
+                  Excluir
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={permissoes[tela.nomeTela]?.visualizar || false}
+                    onChange={() => handleCheckboxChange(tela.nomeTela, "visualizar")}
+                  />
+                  Visualizar
+                </label>
+              </C.CheckboxContainer>
+            </div>
           ))}
 
-        <C.Button type="submit">Salvar Alterações</C.Button>
+        <C.Button type="submit">Salvar</C.Button>
       </C.Form>
     </C.Container>
   );

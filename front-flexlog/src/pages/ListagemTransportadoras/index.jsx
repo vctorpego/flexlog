@@ -4,25 +4,22 @@ import jwt_decode from "jwt-decode";
 import Grid from "../../components/Grid";
 import ModalExcluir from "../../components/ModalExcluir";
 import { useNavigate } from "react-router-dom";
-import * as C from "./styles";
+import *  as C from "./styles";
 import SearchBar from "../../components/SearchBar";
 import { AddButton } from "./styles";
 
 
-const ListagemUsuarios = () => {
-  const [usuarios, setUsuarios] = useState([]);
+
+
+const ListagemTransportadoras = () => {
+  const [transportadoras, setTransportadoras] = useState([]);
   const [user, setUser] = useState(null);
   const [openModalExcluir, setOpenModalExcluir] = useState(false);
-  const [usuarioExcluir, setUsuarioExcluir] = useState(null);
+  const [transportadoraExcluir, setTransportadoraExcluir] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [userPermissions, setUserPermissions] = useState([]);
   const [permissoesTelaAtual, setPermissoesTelaAtual] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);  // estado do sidebar
   const navigate = useNavigate();
-
-  const toggleSidebar = () => {
-    setSidebarOpen((prev) => !prev);
-  };
 
   const getToken = () => {
     const token = localStorage.getItem("token");
@@ -61,29 +58,31 @@ const ListagemUsuarios = () => {
     const userLogin = decoded.sub;
 
     axios
-      .get("http://localhost:8080/usuario", getRequestConfig())
+      .get("http://localhost:8080/transportadora", getRequestConfig())
       .then(({ data }) => {
-        setUsuarios(data);
+        setTransportadoras(data);
       })
       .catch((err) => {
-        console.error("Erro ao buscar usuários:", err);
+        console.error("Erro ao buscar transportadoras:", err);
       });
 
     const fetchUserPermissions = async () => {
       try {
+        // Busca o ID do usuário pelo login
         const response = await axios.get(
           `http://localhost:8080/usuario/id/${userLogin}`,
           getRequestConfig()
         );
         const userId = response.data;
 
+        // Busca permissões do usuário para a tela atual
         const permissionsResponse = await axios.get(
           `http://localhost:8080/permissao/telas/${userId}`,
           getRequestConfig()
         );
         setUserPermissions(permissionsResponse.data);
 
-        const telaAtual = "Tela de Usuarios";
+        const telaAtual = "Tela de Transportadoras";  
         const permissoesTela = permissionsResponse.data.find(
           (perm) => perm.tela === telaAtual
         );
@@ -99,55 +98,57 @@ const ListagemUsuarios = () => {
     fetchUserPermissions();
   }, [navigate]);
 
-  const filterUsuarios = () => {
+  const filterTransportadoras = () => {
     return !searchQuery
-      ? usuarios
-      : usuarios.filter((usuario) =>
-        usuario.nomeUsuario.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      ? transportadoras
+      : transportadoras.filter((transportadora) =>
+          transportadora.nomeTransportadora.toLowerCase().includes(searchQuery.toLowerCase())
+        );
   };
 
-  const handleDeleteUsuario = (usuarioId) => {
-    setUsuarioExcluir(usuarioId);
+  const handleDeleteTransportadora = (transportadoraId) => {
+    setTransportadoraExcluir(transportadoraId);
     setOpenModalExcluir(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:8080/usuario/${usuarioExcluir}`,
+        `http://localhost:8080/transportadora/${transportadoraExcluir}`,
         getRequestConfig()
       );
 
-      setUsuarios((prev) =>
-        prev.filter((usuario) => usuario.idUsuario !== usuarioExcluir)
+      setTransportadoras((prev) =>
+        prev.filter((transportadora) => transportadora.idTransportadora !== transportadoraExcluir)
       );
       setOpenModalExcluir(false);
-      setUsuarioExcluir(null);
+      setTransportadoraExcluir(null);
     } catch (error) {
       if (error.response?.status === 409) {
-        alert("⚠️ Você não pode excluir o próprio usuário.");
+        alert("⚠️ Você não pode excluir esta transportadora.");
       } else {
-        console.error("Erro ao deletar usuário:", error);
-        alert("❌ Ocorreu um erro ao deletar o usuário.");
+        console.error("Erro ao deletar transportadora:", error);
+        alert("❌ Ocorreu um erro ao deletar a transportadora.");
       }
     }
   };
 
   const handleCloseModal = () => {
     setOpenModalExcluir(false);
-    setUsuarioExcluir(null);
+    setTransportadoraExcluir(null);
   };
 
-  const handleAddUsuario = () => {
-    navigate("/usuarios/adicionar");
+  const handleAddTransportadora = () => {
+    navigate("/transportadoras/adicionar");
   };
 
-  const handleEditUsuario = (usuarioId) => {
-    navigate(`/usuarios/editar/${usuarioId}`);
+  const handleEditTransportadora = (transportadoraId) => {
+    navigate(`/transportadoras/editar/${transportadoraId}`);
   };
 
-  const columns = ["ID", "Nome", "Email", "Telefone", "Login"];
+  const columns = ["ID", "Nome Social", "CNPJ", "Cidade"];
+
+    // Ajuste as colunas conforme seu objeto transportadora
 
   const actions = [];
   if (permissoesTelaAtual.includes("PUT")) actions.push("edit");
@@ -159,33 +160,32 @@ const ListagemUsuarios = () => {
   return (
     <C.Container>
       <C.Content>
-        <C.Title>Lista de Usuários</C.Title>
+        <C.Title>Lista de Transportadoras</C.Title>
 
         <SearchBar input={searchQuery} setInput={setSearchQuery} />
 
         {permissoesTelaAtual.includes("POST") && (
-          <AddButton onClick={handleAddUsuario}>
-            Adicionar Usuario
+            <AddButton onClick={handleAddTransportadora}>
+            Adicionar Transportadora
           </AddButton>
 
         )}
 
-        {usuarios.length === 0 ? (
-          <p>Nenhum usuário encontrado.</p>
+        {transportadoras.length === 0 ? (
+          <p>Nenhuma transportadora encontrada.</p>
         ) : (
           <Grid
-            data={filterUsuarios()}
+            data={filterTransportadoras()}
             columns={columns}
             columnMap={{
-              ID: "idUsuario",
-              Nome: "nomeUsuario",
-              Email: "emailUsuario",
-              Telefone: "telefoneUsuario",
-              Login: "login",
+              ID: "idTransportadora",
+              "Nome Social": "nomeSocial",
+              CNPJ: "cnpj",
+              Cidade : "cidade"
             }}
-            idKey="idUsuario"
-            handleDelete={handleDeleteUsuario}
-            handleEdit={handleEditUsuario}
+            idKey="idTransportadora"
+            handleDelete={handleDeleteTransportadora}
+            handleEdit={handleEditTransportadora}
             actions={actions}
             showActionsColumn={showActionsColumn}
           />
@@ -201,4 +201,4 @@ const ListagemUsuarios = () => {
   );
 };
 
-export default ListagemUsuarios;
+export default ListagemTransportadoras;
