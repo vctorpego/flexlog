@@ -15,7 +15,7 @@ public class Entregador extends Usuario {
     @Column(nullable = false)
     private String cnh;
 
-    @OneToMany(mappedBy = "entregador", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "entregador", orphanRemoval = true)
     private List<TentativaEntrega> tentativas = new ArrayList<>();
 
     public Entregador() {

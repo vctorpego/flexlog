@@ -1,6 +1,9 @@
 package br.bom.flexlog.academic.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,43 +11,35 @@ import java.util.Objects;
 @Embeddable
 public class HistoricoStatusPK implements Serializable {
 
-    private int idPacote;
-    private int idStatusPacote;
+    @ManyToOne
+    @JoinColumn(name = "id_pacote")
+    private Pacote pacote;
+
+    @ManyToOne
+    @JoinColumn(name = "id_status_pacote")
+    private StatusPacote status;
 
     public HistoricoStatusPK() {}
 
-    public HistoricoStatusPK(int idPacote, int idStatusPacote) {
-        this.idPacote = idPacote;
-        this.idStatusPacote = idStatusPacote;
+    public HistoricoStatusPK(Pacote pacote, StatusPacote status) {
+        this.pacote = pacote;
+        this.status = status;
     }
 
-    public int getIdPacote() {
-        return idPacote;
+    public Pacote getPacote() {
+        return pacote;
     }
 
-    public void setIdPacote(int idPacote) {
-        this.idPacote = idPacote;
+    public void setPacote(Pacote pacote) {
+        this.pacote = pacote;
     }
 
-    public int getIdStatusPacote() {
-        return idStatusPacote;
+    public StatusPacote getStatusPacote() {
+        return status;
     }
 
-    public void setIdStatusPacote(int idStatusPacote) {
-        this.idStatusPacote = idStatusPacote;
+    public void setStatusPacote(StatusPacote status) {
+        this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HistoricoStatusPK)) return false;
-        HistoricoStatusPK that = (HistoricoStatusPK) o;
-        return idPacote == that.idPacote &&
-                idStatusPacote == that.idStatusPacote;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idPacote, idStatusPacote);
-    }
 }

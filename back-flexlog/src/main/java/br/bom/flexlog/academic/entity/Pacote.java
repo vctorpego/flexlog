@@ -37,13 +37,13 @@ public class Pacote implements Serializable {
     @JoinColumn(name = "id_transportadora", nullable = false)
     private Transportadora transportadora;
 
-    @OneToMany(mappedBy = "pacote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pacote", orphanRemoval = true)
     private List<TentativaEntrega> tentativas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pacote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "id.pacote", orphanRemoval = true)
     private List<HistoricoStatusPacote> historicosStatus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pacote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pacote", orphanRemoval = true)
     private List<HistoricoAgendamentoPacote> historicosAgendamento = new ArrayList<>();
 
 

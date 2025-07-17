@@ -41,7 +41,7 @@ public class Transportadora implements Serializable {
     @Column
     private String cep;
 
-    @OneToMany(mappedBy = "transportadora", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "transportadora", orphanRemoval = true)
     private List<Pacote> pacotes = new ArrayList<>();
 
     public Transportadora() {

@@ -15,7 +15,7 @@ public class StatusPacote implements Serializable {
     @Column
     private String nomeStatusPacote;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.status", cascade = CascadeType.ALL)
     private List<HistoricoStatusPacote> historicos = new ArrayList<>();
 
 
