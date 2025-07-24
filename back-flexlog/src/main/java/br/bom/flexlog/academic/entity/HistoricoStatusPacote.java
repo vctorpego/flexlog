@@ -1,18 +1,21 @@
 package br.bom.flexlog.academic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+
 import java.io.Serializable;
+
 import java.util.Date;
 
 
 @Entity
-public class HistoricoStatusPacote  implements Serializable {
+public class HistoricoStatusPacote implements Serializable {
 
     @EmbeddedId
     private HistoricoStatusPK id;
 
-    @Temporal(value = TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date dataStatus;
 
@@ -22,7 +25,7 @@ public class HistoricoStatusPacote  implements Serializable {
         this.id = new HistoricoStatusPK(pacote, status);
         this.dataStatus = dataStatus;
     }
-
+    @JsonIgnore
     public Pacote getPacote() {
         return id.getPacote();
     }
@@ -39,11 +42,12 @@ public class HistoricoStatusPacote  implements Serializable {
         this.id.setStatusPacote(status);
     }
 
-    public Date getDataStatus() {
-        return dataStatus;
+    public void setDataStatus(Date dataHora) {
+        this.dataStatus = dataHora;
     }
 
-    public void setDataStatus(Date dataStatus) {
-        this.dataStatus = dataStatus;
+    public void setId(HistoricoStatusPK id) {
+        this.id = id;
     }
+
 }

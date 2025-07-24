@@ -21,6 +21,8 @@ public class UsuarioDTO {
     private Boolean isAdm;
     private List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario;
 
+    private String tipoUsuarioLabel;
+
     public UsuarioDTO(Usuario usuario){
         BeanUtils.copyProperties(usuario, this);
     }
@@ -91,6 +93,14 @@ public class UsuarioDTO {
 
     public void setIsAdm(Boolean isAdm) {
         this.isAdm = isAdm;
+    }
+
+    public String getTipoUsuarioLabel() {
+        return tipoUsuarioLabel;
+    }
+
+    public void setTipoUsuarioLabel(String tipoUsuarioLabel) {
+        this.tipoUsuarioLabel = tipoUsuarioLabel;
     }
 
     public Boolean getIsSuperAdm() {

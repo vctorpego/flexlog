@@ -1,5 +1,8 @@
 package br.bom.flexlog.academic.entity;
 
+import br.bom.flexlog.academic.dto.PacoteDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +36,10 @@ public class Pacote implements Serializable {
     @Column(nullable = false)
     private String numeroEndereco;
 
+    @Column( nullable = false)
+    private String link;
+
+
     @ManyToOne
     @JoinColumn(name = "id_transportadora", nullable = false)
     private Transportadora transportadora;
@@ -40,11 +47,30 @@ public class Pacote implements Serializable {
     @OneToMany(mappedBy = "pacote", orphanRemoval = true)
     private List<TentativaEntrega> tentativas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id.pacote", orphanRemoval = true)
+    @OneToMany(mappedBy = "id.pacote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<HistoricoStatusPacote> historicosStatus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pacote", orphanRemoval = true)
+    @OneToMany(mappedBy = "id.pacote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoAgendamentoPacote> historicosAgendamento = new ArrayList<>();
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_entregador")
+    @JsonBackReference
+    private Entregador entregador;
+
+    public Entregador getEntregador() {
+        return entregador;
+    }
+
+    public void setEntregador(Entregador entregador) {
+        this.entregador = entregador;
+    }
+
+
+
+
 
 
     public Pacote() {}
@@ -60,6 +86,19 @@ public class Pacote implements Serializable {
         this.numeroEndereco = numeroEndereco;
         this.transportadora = transportadora;
     }
+
+    public Pacote(PacoteDTO dto) {
+        this.codigoRastreio = dto.getCodigoRastreio();
+        this.destinatario = dto.getDestinatario();
+        this.cep = dto.getCep();
+        this.cidade = dto.getCidade();
+        this.bairro = dto.getBairro();
+        this.rua = dto.getRua();
+        this.numeroEndereco = dto.getNumeroEndereco();
+
+
+    }
+
 
     public List<HistoricoStatusPacote> getHistoricosStatus() {
         return historicosStatus;
@@ -116,6 +155,14 @@ public class Pacote implements Serializable {
 
     public void setBairro(String bairro) {
         this.bairro = bairro;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getRua() {

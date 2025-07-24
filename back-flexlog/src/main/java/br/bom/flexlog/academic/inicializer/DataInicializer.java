@@ -1,13 +1,7 @@
 package br.bom.flexlog.academic.inicializer;
 
-import br.bom.flexlog.academic.entity.Permissao;
-import br.bom.flexlog.academic.entity.Tela;
-import br.bom.flexlog.academic.entity.Usuario;
-import br.bom.flexlog.academic.entity.UsuarioPermissaoTela;
-import br.bom.flexlog.academic.repository.PermissaoRepository;
-import br.bom.flexlog.academic.repository.TelaRepository;
-import br.bom.flexlog.academic.repository.UsuarioPermissaoTelaRepository;
-import br.bom.flexlog.academic.repository.UsuarioRepository;
+import br.bom.flexlog.academic.entity.*;
+import br.bom.flexlog.academic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,26 +22,46 @@ public class DataInicializer implements CommandLineRunner {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private StatusPacoteRepository statusPacoteRepository;
+
+    @Autowired
+    private StatusAgendamentoRepository statusAgendamentoRepository;
+
+    @Autowired
     private UsuarioPermissaoTelaRepository usuarioPermissaoTelaRepository;
 
     @Override
     public void run(String... args) throws Exception {
         if (telaRepository.count() == 0) {
             System.out.println("-> Inserindo Telas...");
-          //  telaRepository.save(new Tela("Tela de Dashboard", "/home"));
-          //  telaRepository.save(new Tela("Tela de Produtos", "/produtos"));
-          //  telaRepository.save(new Tela("Tela de Fornecedores", "/fornecedores"));
-          //  telaRepository.save(new Tela("Tela de Clientes", "/clientes"));
-          //  telaRepository.save(new Tela("Tela de Recarga", "/recarga"));
-          //  telaRepository.save(new Tela("Tela de Vendas", "/vendas"));
-          //  telaRepository.save(new Tela("Tela de Pagamentos", "/pagamentos"));
-          //  telaRepository.save(new Tela("Tela de Relatórios", "/relatorios"));
-           // telaRepository.save(new Tela("Tela de Entrada", "/entrada"));
-            //telaRepository.save(new Tela("Tela de Saída", "/saida"));
+            telaRepository.save(new Tela("Tela de Entrada", "/entrada"));
             telaRepository.save(new Tela("Tela de Usuarios", "/usuarios"));
+            telaRepository.save(new Tela("Tela de Transportadoras", "/transportadoras"));
             telaRepository.save(new Tela("Tela de Tela", "/telas"));
         } else {
             System.out.println("-> Telas já existem");
+        }
+        if(statusPacoteRepository.count() == 0){
+            System.out.println("-> Inserindo Status de Pacotes...");
+            statusPacoteRepository.save(new StatusPacote("Chegou na cidade"));
+            statusPacoteRepository.save(new StatusPacote("Saiu para entrega"));
+            statusPacoteRepository.save(new StatusPacote("Entregue com sucesso"));
+            statusPacoteRepository.save(new StatusPacote("Tentativa de entrega com falha"));
+        }else{
+            System.out.println("-> Status já existem");
+
+        }
+        if(statusAgendamentoRepository.count() == 0){
+            System.out.println("-> Inserindo  Status de Agendamentos");
+            statusAgendamentoRepository.save(new StatusAgendamento("Aguardando Agendamento"));
+            statusAgendamentoRepository.save(new StatusAgendamento("Agendado"));
+            statusAgendamentoRepository.save(new StatusAgendamento("Aguardando Reagendamento"));
+            statusAgendamentoRepository.save(new StatusAgendamento("Reagendado"));
+            statusAgendamentoRepository.save(new StatusAgendamento("Agendado para Hoje"));
+
+
+        }else{
+            System.out.println("-> Agendamentos já existem");
         }
 
         if (permissaoRepository.count() == 0) {

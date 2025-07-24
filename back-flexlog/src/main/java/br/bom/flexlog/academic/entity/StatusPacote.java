@@ -1,10 +1,10 @@
 package br.bom.flexlog.academic.entity;
 
-import jakarta.persistence.*;
 
+
+import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 public class StatusPacote implements Serializable {
@@ -15,8 +15,6 @@ public class StatusPacote implements Serializable {
     @Column
     private String nomeStatusPacote;
 
-    @OneToMany(mappedBy = "id.status", cascade = CascadeType.ALL)
-    private List<HistoricoStatusPacote> historicos = new ArrayList<>();
 
 
     public StatusPacote(String nomeStatusPacote) {
@@ -42,11 +40,5 @@ public class StatusPacote implements Serializable {
         this.nomeStatusPacote = nomeStatusPacote;
     }
 
-    public List<HistoricoStatusPacote> getHistoricos() {
-        return historicos;
-    }
 
-    public void setHistoricos(List<HistoricoStatusPacote> historicos) {
-        this.historicos = historicos;
-    }
 }

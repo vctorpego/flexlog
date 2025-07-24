@@ -2,6 +2,7 @@ package br.bom.flexlog.academic.entity;
 
 import br.bom.flexlog.academic.dto.EntregadorDTO;
 import br.bom.flexlog.academic.dto.UsuarioDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.beans.BeanUtils;
 
@@ -14,6 +15,11 @@ public class Entregador extends Usuario {
 
     @Column(nullable = false)
     private String cnh;
+
+    @OneToMany(mappedBy = "entregador")
+    @JsonManagedReference
+    private List<Pacote> pacotes;
+
 
     @OneToMany(mappedBy = "entregador", orphanRemoval = true)
     private List<TentativaEntrega> tentativas = new ArrayList<>();
@@ -40,6 +46,14 @@ public class Entregador extends Usuario {
 
     public String getCnh() {
         return cnh;
+    }
+
+    public List<Pacote> getPacotes() {
+        return pacotes;
+    }
+
+    public void setPacotes(List<Pacote> pacotes) {
+        this.pacotes = pacotes;
     }
 
     public void setCnh(String cnh) {

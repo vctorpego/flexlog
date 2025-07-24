@@ -24,6 +24,10 @@ public class StatusAgendamento implements Serializable {
 
     }
 
+    public StatusAgendamento(String nomeAgendamento) {
+        this.nomeAgendamento = nomeAgendamento;
+    }
+
     public int getIdStatusAgendamento() {
         return idStatusAgendamento;
     }

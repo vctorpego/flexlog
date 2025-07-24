@@ -1,6 +1,7 @@
 package br.bom.flexlog.academic.entity;
 
 import br.bom.flexlog.academic.dto.UsuarioPermissaoTelaDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.beans.BeanUtils;
 
@@ -17,6 +18,7 @@ public class UsuarioPermissaoTela {
     private Permissao permissao;
 
     @ManyToOne
+    @JsonBackReference
     private Usuario usuario;
 
     public UsuarioPermissaoTela(UsuarioPermissaoTelaDTO usuarioPermissaoTela){

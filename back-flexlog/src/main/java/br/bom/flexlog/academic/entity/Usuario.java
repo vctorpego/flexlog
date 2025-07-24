@@ -1,7 +1,7 @@
 package br.bom.flexlog.academic.entity;
 
 import br.bom.flexlog.academic.dto.UsuarioDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.beans.BeanUtils;
 
@@ -40,8 +40,15 @@ public class Usuario implements Serializable {
     private Boolean isAdm = false;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference // evita referência cíclica na serialização JSON
+    @JsonManagedReference
     private List<UsuarioPermissaoTela> usuarioPermissaoTelaListUsuario;
+
+    @Transient
+    public String getTipoUsuarioLabel() {
+        if (this instanceof Entregador) return "Entregador";
+        return "Usuário";
+    }
+
 
     // Construtores
     public Usuario() {}
@@ -135,12 +142,4 @@ public class Usuario implements Serializable {
         this.usuarioPermissaoTelaListUsuario = usuarioPermissaoTelaListUsuario;
     }
 
-    // Métodos vazios podem ser removidos ou implementados futuramente
-    public void login() {
-        // lógica de login
-    }
-
-    public void logout() {
-        // lógica de logout
-    }
 }

@@ -3,6 +3,7 @@ package br.bom.flexlog.academic.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -11,24 +12,17 @@ public class HistoricoAgendamentoPacote implements Serializable {
     @EmbeddedId
     private HistoricoAgendamentoPK id;
 
-    @ManyToOne
-    @MapsId("idPacote") // vincula ao campo da chave composta
-    @JoinColumn(name = "id_pacote")
-    private Pacote pacote;
-
-    @ManyToOne
-    @MapsId("idStatusAgendamento")
-    @JoinColumn(name = "id_status_agendamento")
-    private StatusAgendamento status;
 
     @Temporal(value = TemporalType.DATE)
     @Column(nullable = false, updatable = false)
     private Date dtModificacao;
 
-    public HistoricoAgendamentoPacote(Pacote pacote, StatusAgendamento status, Date dtModificacao) {
-        this.pacote = pacote;
-        this.status = status;
+    @Column
+    private LocalDateTime agendamento;
+
+    public HistoricoAgendamentoPacote(Pacote pacote, StatusAgendamento status, Date dtModificacao, LocalDateTime agendamento) {
         this.dtModificacao = dtModificacao;
+        this.agendamento = agendamento;
     }
     public HistoricoAgendamentoPacote() {
 
@@ -50,19 +44,11 @@ public class HistoricoAgendamentoPacote implements Serializable {
         this.dtModificacao = dtModificacao;
     }
 
-    public StatusAgendamento getStatus() {
-        return status;
+    public LocalDateTime getAgendamento() {
+        return agendamento;
     }
 
-    public void setStatus(StatusAgendamento status) {
-        this.status = status;
-    }
-
-    public Pacote getPacote() {
-        return pacote;
-    }
-
-    public void setPacote(Pacote pacote) {
-        this.pacote = pacote;
+    public void setAgendamento(LocalDateTime agendamento) {
+        this.agendamento = agendamento;
     }
 }

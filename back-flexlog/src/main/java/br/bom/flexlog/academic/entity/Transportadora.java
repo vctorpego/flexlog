@@ -1,6 +1,7 @@
 package br.bom.flexlog.academic.entity;
 
 import br.bom.flexlog.academic.dto.TransportadoraDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -42,6 +43,7 @@ public class Transportadora implements Serializable {
     private String cep;
 
     @OneToMany(mappedBy = "transportadora", orphanRemoval = true)
+    @JsonIgnore
     private List<Pacote> pacotes = new ArrayList<>();
 
     public Transportadora() {
