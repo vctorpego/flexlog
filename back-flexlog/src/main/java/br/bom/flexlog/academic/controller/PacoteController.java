@@ -2,8 +2,10 @@ package br.bom.flexlog.academic.controller;
 
 import br.bom.flexlog.academic.dto.PacoteDTO;
 import br.bom.flexlog.academic.dto.PacoteSaidaDTO;
+import br.bom.flexlog.academic.exeptions.ConflictExeption;
 import br.bom.flexlog.academic.service.PacoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,10 +46,13 @@ public class PacoteController {
         try {
             PacoteDTO pacoteAtualizado = pacoteService.efetuarSaida(idPacote, dto);
             return ResponseEntity.ok(pacoteAtualizado);
+        } catch (ConflictExeption e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao efetuar saída: " + e.getMessage());
         }
     }
+
 
 
 }

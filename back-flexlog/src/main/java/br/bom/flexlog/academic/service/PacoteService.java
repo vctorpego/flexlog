@@ -3,6 +3,7 @@ package br.bom.flexlog.academic.service;
 import br.bom.flexlog.academic.dto.PacoteDTO;
 import br.bom.flexlog.academic.dto.PacoteSaidaDTO;
 import br.bom.flexlog.academic.entity.*;
+import br.bom.flexlog.academic.exeptions.ConflictExeption;
 import br.bom.flexlog.academic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,42 +91,46 @@ public class PacoteService {
     }
     public PacoteDTO efetuarSaida(int idPacote, PacoteSaidaDTO dto) throws Exception {
         try {
-            // Busca o pacote existente
             Pacote pacote = pacoteRepository.findById(idPacote)
                     .orElseThrow(() -> new Exception("Pacote não encontrado"));
 
-            // Busca o entregador
+            // Aqui verifica se já existe saída
+            StatusPacote statusEmTransporte = statusPacoteRepository.findById(2)
+                    .orElseThrow(() -> new Exception("Status não encontrado"));
+
+            // Supondo que se o último status já for "Em Transporte", a saída já está feita
+            if (pacote.getUltimoStatus() != null &&
+                    pacote.getUltimoStatus().getIdStatusPacote() == statusEmTransporte.getIdStatusPacote()) {
+                throw new ConflictExeption("Saída já foi registrada para este pacote.");
+            }
+
             Entregador entregador = entregadorRepository.findById(dto.getEntregador().getIdUsuario())
                     .orElseThrow(() -> new Exception("Entregador não encontrado"));
 
-            // Atualiza o entregador no pacote
             pacote.setEntregador(entregador);
 
-            // Busca o status de ID 2 (ex: "Em Transporte")
-            StatusPacote status = statusPacoteRepository.findById(2)
-                    .orElseThrow(() -> new Exception("Status não encontrado"));
-
-            // Cria o novo histórico de status
             HistoricoStatusPacote historico = new HistoricoStatusPacote();
-            historico.setId(new HistoricoStatusPK(pacote, status));
+            historico.setId(new HistoricoStatusPK(pacote, statusEmTransporte));
             historico.setDataStatus(new Date());
-            pacote.setUltimoStatus(status);
 
-            // Adiciona à lista de históricos
+            pacote.setUltimoStatus(statusEmTransporte);
+
             if (pacote.getHistoricosStatus() == null) {
                 pacote.setHistoricosStatus(new ArrayList<>());
             }
             pacote.getHistoricosStatus().add(historico);
 
-            // Salva as alterações
             Pacote atualizado = pacoteRepository.save(pacote);
 
             return new PacoteDTO(atualizado);
 
+        } catch (ConflictExeption e) {
+            throw e; // deixa passar para o controller tratar
         } catch (Exception e) {
             throw new Exception("Erro ao efetuar saída do pacote: " + e.getMessage(), e);
         }
     }
+
 
 
 
