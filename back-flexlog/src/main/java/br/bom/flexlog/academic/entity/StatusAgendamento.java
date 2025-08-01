@@ -1,8 +1,11 @@
 package br.bom.flexlog.academic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class StatusAgendamento implements Serializable {
@@ -13,6 +16,18 @@ public class StatusAgendamento implements Serializable {
     private String nomeAgendamento;
     @Column
     private String horarioPrevisto;
+
+    @OneToMany(mappedBy = "ultimoAgendamento")
+    @JsonIgnore
+    private List<Pacote> pacotes = new ArrayList<>();
+
+    public List<Pacote> getPacotes() {
+        return pacotes;
+    }
+
+    public void setPacotes(List<Pacote> pacotes) {
+        this.pacotes = pacotes;
+    }
 
     public StatusAgendamento(int idStatusAgendamento, String nomeAgendamento, String horarioPrevisto) {
         this.idStatusAgendamento = idStatusAgendamento;

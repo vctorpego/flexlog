@@ -2,11 +2,13 @@ package br.bom.flexlog.academic.entity;
 
 import br.bom.flexlog.academic.dto.PacoteDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Pacote implements Serializable {
@@ -44,7 +46,10 @@ public class Pacote implements Serializable {
     @JoinColumn(name = "id_transportadora", nullable = false)
     private Transportadora transportadora;
 
+
     @OneToMany(mappedBy = "pacote", orphanRemoval = true)
+    @JsonManagedReference
+    @JsonIgnore
     private List<TentativaEntrega> tentativas = new ArrayList<>();
 
     @OneToMany(mappedBy = "id.pacote", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,14 +59,39 @@ public class Pacote implements Serializable {
     @OneToMany(mappedBy = "id.pacote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoAgendamentoPacote> historicosAgendamento = new ArrayList<>();
 
-
     @ManyToOne
     @JoinColumn(name = "id_entregador")
     @JsonBackReference
     private Entregador entregador;
 
+    @ManyToOne
+    @JoinColumn(name = "ultimo_status")
+    private StatusPacote ultimoStatus ;
+
+    @ManyToOne
+    @JoinColumn(name = "ultimo_agendamento")
+    private StatusAgendamento ultimoAgendamento;
+
+
+
+    public StatusAgendamento getUltimoAgendamento() {
+        return ultimoAgendamento;
+    }
+
+    public void setUltimoAgendamento(StatusAgendamento ultimoAgendamento) {
+        this.ultimoAgendamento = ultimoAgendamento;
+    }
+
     public Entregador getEntregador() {
         return entregador;
+    }
+
+    public StatusPacote getUltimoStatus() {
+        return ultimoStatus;
+    }
+
+    public void setUltimoStatus(StatusPacote ultimoStatus) {
+        this.ultimoStatus = ultimoStatus;
     }
 
     public void setEntregador(Entregador entregador) {

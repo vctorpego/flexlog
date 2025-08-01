@@ -22,6 +22,7 @@ public class Entregador extends Usuario {
 
 
     @OneToMany(mappedBy = "entregador", orphanRemoval = true)
+    @JsonManagedReference
     private List<TentativaEntrega> tentativas = new ArrayList<>();
 
     public Entregador() {

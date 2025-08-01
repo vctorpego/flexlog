@@ -2,6 +2,8 @@ package br.bom.flexlog.academic.controller;
 
 import br.bom.flexlog.academic.dto.EntregadorDTO;
 import br.bom.flexlog.academic.dto.TransportadoraDTO;
+import br.bom.flexlog.academic.entity.Pacote;
+import br.bom.flexlog.academic.repository.PacoteRepository;
 import br.bom.flexlog.academic.service.EntregadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,14 @@ public class EntregadorController {
 
     @Autowired
     private EntregadorService  entregadorService;
+    @Autowired
+    private  PacoteRepository pacoteRepository;
+
+    @GetMapping("/pacotes/{id}")
+    public ResponseEntity<List<Pacote>> listarPacotesNaoEntregues(@PathVariable int id) {
+        List<Pacote> pacotes = pacoteRepository.findPacotesNaoEntreguesPorEntregador(id);
+        return ResponseEntity.ok(pacotes);
+    }
 
     @GetMapping
     public List<EntregadorDTO> listarTodos(){

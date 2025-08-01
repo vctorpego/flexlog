@@ -2,7 +2,6 @@ package br.bom.flexlog.academic.controller;
 
 import br.bom.flexlog.academic.dto.PacoteDTO;
 import br.bom.flexlog.academic.dto.PacoteSaidaDTO;
-import br.bom.flexlog.academic.dto.UsuarioDTO;
 import br.bom.flexlog.academic.service.PacoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,11 @@ public class PacoteController {
     @GetMapping
     public List<PacoteDTO> listarTodos() {
         return pacoteService.ListarTodos();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<PacoteDTO> buscarPorId(@PathVariable Integer id) {
+        PacoteDTO pacote = pacoteService.buscarPorId(id);
+        return pacote != null ? ResponseEntity.ok(pacote) : ResponseEntity.notFound().build();
     }
 
     @PostMapping

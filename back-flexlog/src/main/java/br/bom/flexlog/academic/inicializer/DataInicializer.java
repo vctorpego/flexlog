@@ -37,6 +37,10 @@ public class DataInicializer implements CommandLineRunner {
             telaRepository.save(new Tela("Tela de Entrada", "/entrada"));
             telaRepository.save(new Tela("Tela de Usuarios", "/usuarios"));
             telaRepository.save(new Tela("Tela de Transportadoras", "/transportadoras"));
+            telaRepository.save(new Tela("Tela de Pacotes", "/pacotes"));
+            telaRepository.save(new Tela("Tela de Meus Pacotes", "/meus-pacotes"));
+
+
             telaRepository.save(new Tela("Tela de Tela", "/telas"));
         } else {
             System.out.println("-> Telas já existem");
@@ -81,13 +85,13 @@ public class DataInicializer implements CommandLineRunner {
 
             // Criptografar a senha usando BCryptPasswordEncoder
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String senhaCriptografada = passwordEncoder.encode("rick");
+            String senhaCriptografada = passwordEncoder.encode("superadmin");
             Usuario superAdmin = new Usuario();
             superAdmin.setNomeUsuario("Paulo Henrique");
-            superAdmin.setLogin("rick");
+            superAdmin.setLogin("superadmin");
             superAdmin.setSenhaUsuario(senhaCriptografada);
             superAdmin.setEmailUsuario("superadm@email.com");
-            superAdmin.setTelefoneUsuario("2799923-8772");
+            superAdmin.setTelefoneUsuario("273700-0000");
             superAdmin.setIsAdm(true);
             superAdmin.setIsSuperAdm(true);
             superAdmin = usuarioRepository.save(superAdmin); // <- salva e obtém a instância gerenciada

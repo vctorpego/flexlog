@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Embeddable
@@ -23,6 +24,8 @@ public class HistoricoStatusPK implements Serializable {
     @JsonBackReference
     private StatusPacote status;
 
+
+
     public HistoricoStatusPK() {}
 
     public HistoricoStatusPK(Pacote pacote, StatusPacote status) {
@@ -36,6 +39,19 @@ public class HistoricoStatusPK implements Serializable {
 
     public void setPacote(Pacote pacote) {
         this.pacote = pacote;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HistoricoStatusPK that = (HistoricoStatusPK) o;
+        return Objects.equals(pacote, that.pacote) && Objects.equals(status, that.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pacote, status);
     }
 
     public StatusPacote getStatusPacote() {

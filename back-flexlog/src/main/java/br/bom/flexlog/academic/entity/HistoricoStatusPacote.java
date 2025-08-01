@@ -1,5 +1,6 @@
 package br.bom.flexlog.academic.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -44,6 +45,11 @@ public class HistoricoStatusPacote implements Serializable {
 
     public void setDataStatus(Date dataHora) {
         this.dataStatus = dataHora;
+    }
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "America/Sao_Paulo")
+    public Date getDataStatus() {
+        return dataStatus;
     }
 
     public void setId(HistoricoStatusPK id) {

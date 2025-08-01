@@ -1,7 +1,6 @@
 package br.bom.flexlog.academic.dto;
 
-import br.bom.flexlog.academic.entity.HistoricoStatusPacote;
-import br.bom.flexlog.academic.entity.Pacote;
+import br.bom.flexlog.academic.entity.*;
 
 import java.util.List;
 
@@ -17,8 +16,10 @@ public class PacoteDTO {
     private String numeroEndereco;
     private TransportadoraLiteDTO transportadora;
     private String link;
-
+    private StatusPacote ultimoStatus;
+    private StatusAgendamento ultimoAgendamento;
     private List<HistoricoStatusPacote> historicoStatusPacoteList;
+    private List <HistoricoAgendamentoPacote> historicoAgendamentoPacotes;
 
 
 
@@ -29,8 +30,32 @@ public class PacoteDTO {
         return historicoStatusPacoteList;
     }
 
+    public StatusAgendamento getUltimoAgendamento() {
+        return ultimoAgendamento;
+    }
+
+    public List<HistoricoAgendamentoPacote> getHistoricoAgendamentoPacotes() {
+        return historicoAgendamentoPacotes;
+    }
+
+    public void setHistoricoAgendamentoPacotes(List<HistoricoAgendamentoPacote> historicoAgendamentoPacotes) {
+        this.historicoAgendamentoPacotes = historicoAgendamentoPacotes;
+    }
+
+    public void setUltimoAgendamento(StatusAgendamento ultimoAgendamento) {
+        this.ultimoAgendamento = ultimoAgendamento;
+    }
+
     public void setHistoricoStatusPacoteList(List<HistoricoStatusPacote> historicoStatusPacoteList) {
         this.historicoStatusPacoteList = historicoStatusPacoteList;
+    }
+
+    public StatusPacote getUltimoStatus() {
+        return ultimoStatus;
+    }
+
+    public void setUltimoStatus(StatusPacote ultimoStatus) {
+        this.ultimoStatus = ultimoStatus;
     }
 
     public PacoteDTO(Pacote pacote) {
@@ -44,10 +69,14 @@ public class PacoteDTO {
         this.numeroEndereco = pacote.getNumeroEndereco();
         this.link = pacote.getLink();
         this.historicoStatusPacoteList = pacote.getHistoricosStatus();
+        this.ultimoStatus = pacote.getUltimoStatus();
+        this.ultimoAgendamento = pacote.getUltimoAgendamento();
+        this.historicoAgendamentoPacotes = pacote.getHistoricosAgendamento();
+
 
 
         if (pacote.getTransportadora() != null) {
-            this.transportadora = new TransportadoraLiteDTO(pacote.getTransportadora().getIdTransportadora());
+            this.transportadora = new TransportadoraLiteDTO(pacote.getTransportadora().getIdTransportadora(),pacote.getTransportadora().getNomeSocial());
         }
     }
 

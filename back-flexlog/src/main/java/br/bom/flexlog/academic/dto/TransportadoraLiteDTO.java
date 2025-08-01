@@ -3,16 +3,26 @@ package br.bom.flexlog.academic.dto;
 public class TransportadoraLiteDTO {
 
     private int idTransportadora;
+    private String nomeSocial;
 
     public TransportadoraLiteDTO() {
     }
 
-    public TransportadoraLiteDTO(int idTransportadora) {
+    public TransportadoraLiteDTO(int idTransportadora, String nomeSocial) {
         this.idTransportadora = idTransportadora;
+        this.nomeSocial = nomeSocial;
     }
 
     public int getIdTransportadora() {
         return idTransportadora;
+    }
+
+    public String getNomeSocial() {
+        return nomeSocial;
+    }
+
+    public void setNomeSocial(String nomeSocial) {
+        this.nomeSocial = nomeSocial;
     }
 
     public void setIdTransportadora(int idTransportadora) {

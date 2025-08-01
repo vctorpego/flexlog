@@ -1,5 +1,7 @@
 package br.bom.flexlog.academic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -22,14 +24,18 @@ public class TentativaEntrega implements Serializable {
 
     @Lob
     @Column
+    @JsonIgnore
     private byte[] assinaturaRecebedor;
 
     @ManyToOne
     @JoinColumn(name = "id_entregador", nullable = false)
+    @JsonBackReference  // evita loop
+
     private Entregador entregador;
 
     @ManyToOne
     @JoinColumn(name = "id_pacote", nullable = false)
+    @JsonBackReference  // evita loop
     private Pacote pacote;
 
 

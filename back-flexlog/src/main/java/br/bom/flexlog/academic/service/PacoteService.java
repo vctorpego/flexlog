@@ -2,7 +2,6 @@ package br.bom.flexlog.academic.service;
 
 import br.bom.flexlog.academic.dto.PacoteDTO;
 import br.bom.flexlog.academic.dto.PacoteSaidaDTO;
-import br.bom.flexlog.academic.dto.UsuarioDTO;
 import br.bom.flexlog.academic.entity.*;
 import br.bom.flexlog.academic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,9 @@ public class PacoteService {
         List<Pacote> pacotes = pacoteRepository.findAll();
         return pacotes.stream().map(PacoteDTO::new).toList();
     }
-
+    public PacoteDTO buscarPorId(Integer id){
+        return new PacoteDTO(pacoteRepository.findById(id).get());
+    }
 
     public PacoteDTO inserir(PacoteDTO dto) throws Exception {
         try {
@@ -68,6 +69,8 @@ public class PacoteService {
             List<HistoricoStatusPacote> historicosStatus = new ArrayList<>();
             historicosStatus.add(historicoStatus);
             pacote.setHistoricosStatus(historicosStatus);
+            pacote.setUltimoStatus(statusInicial);
+            pacote.setUltimoAgendamento(agendamentoIni);
 
             List<HistoricoAgendamentoPacote> historicosAgendamento = new ArrayList<>();
             historicosAgendamento.add(historicoAgendamento);
@@ -106,6 +109,7 @@ public class PacoteService {
             HistoricoStatusPacote historico = new HistoricoStatusPacote();
             historico.setId(new HistoricoStatusPK(pacote, status));
             historico.setDataStatus(new Date());
+            pacote.setUltimoStatus(status);
 
             // Adiciona à lista de históricos
             if (pacote.getHistoricosStatus() == null) {
@@ -122,6 +126,9 @@ public class PacoteService {
             throw new Exception("Erro ao efetuar saída do pacote: " + e.getMessage(), e);
         }
     }
+
+
+
 
 
 
