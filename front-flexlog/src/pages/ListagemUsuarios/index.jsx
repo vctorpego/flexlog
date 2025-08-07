@@ -147,7 +147,7 @@ const ListagemUsuarios = () => {
     navigate(`/usuarios/editar/${usuarioId}`);
   };
 
-  const columns = ["ID", "Nome", "Email", "Telefone", "Login"];
+  const columns = ["ID", "Nome", "Nivel", "Email", "Login"];
 
   const actions = [];
   if (permissoesTelaAtual.includes("PUT")) actions.push("edit");
@@ -161,7 +161,7 @@ const ListagemUsuarios = () => {
       <C.Content>
         <C.Title>Lista de Usuários</C.Title>
 
-        <SearchBar input={searchQuery} setInput={setSearchQuery} />
+        <SearchBar input={searchQuery} setInput={setSearchQuery} msg={"Digite o nome"} />
 
         {permissoesTelaAtual.includes("POST") && (
           <AddButton onClick={handleAddUsuario}>
@@ -179,8 +179,9 @@ const ListagemUsuarios = () => {
             columnMap={{
               ID: "idUsuario",
               Nome: "nomeUsuario",
+              Nivel: "tipoUsuarioLabel",
               Email: "emailUsuario",
-              Telefone: "telefoneUsuario",
+              
               Login: "login",
             }}
             idKey="idUsuario"

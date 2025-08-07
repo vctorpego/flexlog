@@ -1,17 +1,21 @@
 import React from "react";
-import { Edit, Trash2, Printer } from "lucide-react"; // Importando ícones adicionais
+import { Edit, Trash2, Printer, Truck, Eye, Mailbox, Undo } from "lucide-react"; // Importando ícones adicionais
 import * as C from "./styles";
 import Button from "../../components/Button"; // Certifique-se de importar o componente Button
 
-const Grid = ({ 
-  data, 
-  columns, 
-  columnMap, 
-  handleDelete, 
-  handleEdit, 
-  handlePrint, 
-  handlePay, 
-  idKey, 
+const Grid = ({
+  data,
+  columns,
+  columnMap,
+  handleDelete,
+  handleEdit,
+  handlePrint,
+  handlePay,
+  handleSaida,
+  handleView,
+  handleTentativaEntregaPacote,
+  handleRollback,
+  idKey,
   actions = ["edit", "delete"], // Define as ações a serem exibidas, com "edit" e "delete" como padrão
   showActionsColumn = true // Controle de exibição da coluna de Ações
 }) => {
@@ -36,10 +40,26 @@ const Grid = ({
           <C.ActionButton onClick={() => handleDelete(item[idKey])}>
             <Trash2 style={{ color: "red", fontSize: "18px" }} />
           </C.ActionButton>
+        )}   
+        {actions.includes("view") && (
+          <C.ActionButton onClick={() => handleView(item[idKey])}>
+            <Eye style={{ color: "cinza", fontSize: "18px" }} />
+          </C.ActionButton>
         )}
-        {actions.includes("print") && (
-          <C.ActionButton onClick={() => handlePrint(item[idKey])}>
-            <Printer style={{ color: "green", fontSize: "18px" }} />
+        {actions.includes("saida") && (
+          <C.ActionButton onClick={() => handleSaida(item[idKey])}>
+            <Truck style={{ color: "black", fontSize: "18px" }} />
+          </C.ActionButton>
+        )}
+        {actions.includes("tentativa") && (
+          <C.ActionButton onClick={() => handleTentativaEntregaPacote(item[idKey])}>
+            <Mailbox style={{ color: "blue", fontSize: "18px" }} />
+          </C.ActionButton>
+        )}
+
+        {actions.includes("rollback") && (
+          <C.ActionButton onClick={() => handleRollback(item[idKey])}>
+            <Undo style={{ color: "green", fontSize: "18px" }} />
           </C.ActionButton>
         )}
         {actions.includes("pay") && (

@@ -25,7 +25,6 @@ const EditUsuario = () => {
   const [isSuperAdm, setIsSuperAdm] = useState(false);
   const [adminChecked, setAdminChecked] = useState(false);
 
-
   const navigate = useNavigate();
 
   const getToken = () => {
@@ -34,7 +33,6 @@ const EditUsuario = () => {
       navigate("/auth/login");
       return null;
     }
-
     try {
       const decoded = jwt_decode(token);
       if (decoded.exp < Date.now() / 1000) {
@@ -65,15 +63,14 @@ const EditUsuario = () => {
 
     const fetchUserData = async () => {
       try {
-        // Pega ID do usuário logado para verificar permissões
+        // Busca ID do usuário logado para permissões
         const userResponse = await axios.get(
           `http://localhost:8080/usuario/id/${userLogin}`,
           getRequestConfig()
         );
-
         const currentUserId = userResponse.data;
 
-        // Pega permissões do usuário logado
+        // Busca permissões do usuário logado
         const permissionsResponse = await axios.get(
           `http://localhost:8080/permissao/telas/${currentUserId}`,
           getRequestConfig()
@@ -87,7 +84,7 @@ const EditUsuario = () => {
 
         setIsSuperAdm(logadoResponse.data.isSuperAdm);
 
-        // Verifica se o usuário tem permissão PUT na tela de usuários
+        // Verifica permissão PUT na tela de usuários
         const telaUsuarios = permissionsResponse.data.find(
           (perm) => perm.tela === "Tela de Usuarios"
         );
@@ -100,7 +97,7 @@ const EditUsuario = () => {
           return;
         }
 
-        // Dados do usuário que está sendo editado
+        // Dados do usuário sendo editado
         const userToEditResponse = await axios.get(
           `http://localhost:8080/usuario/${id}`,
           getRequestConfig()
@@ -120,7 +117,7 @@ const EditUsuario = () => {
         setLogin(login);
         setAdminChecked(isAdm);
 
-        // Buscar dados do entregador pelo ID (caso exista)
+        // Busca dados do entregador, se existir
         try {
           const entregadorResponse = await axios.get(
             `http://localhost:8080/entregador/${id}`,
@@ -129,15 +126,12 @@ const EditUsuario = () => {
           const { cnh } = entregadorResponse.data;
           setCnh(cnh || "");
           setIsEntregador(!!cnh);
-
-        } catch (error) {
+        } catch {
           setCnh("");
           setIsEntregador(false);
-
         }
 
-
-        // Permissões atuais do usuário sendo editado
+        // Permissões atuais do usuário
         const permissoesUsuario = await axios.get(
           `http://localhost:8080/permissao/telas/${id}`,
           getRequestConfig()
@@ -153,12 +147,14 @@ const EditUsuario = () => {
           };
         });
 
-        // Buscar todas as telas para mostrar as permissões
-        const telasResponse = await axios.get("http://localhost:8080/tela", getRequestConfig());
+        // Busca todas as telas para preencher as que faltam com false
+        const telasResponse = await axios.get(
+          "http://localhost:8080/tela",
+          getRequestConfig()
+        );
         const todasAsTelas = telasResponse.data;
         setTelas(todasAsTelas);
 
-        // Preencher permissões para telas que não tem no usuário (false)
         todasAsTelas.forEach((tela) => {
           if (!permissoesObj[tela.nomeTela]) {
             permissoesObj[tela.nomeTela] = {
@@ -183,7 +179,7 @@ const EditUsuario = () => {
   const toggleAllCheckboxes = (checked) => {
     const novasPermissoes = {};
     telas.forEach((tela) => {
-      if (tela.nomeTela === "Tela de Tela") return; // Ignora a tela de controle
+      if (tela.nomeTela === "Tela de Tela") return; // Ignora tela de controle
       novasPermissoes[tela.nomeTela] = {
         adicionar: checked,
         editar: checked,
@@ -216,14 +212,46 @@ const EditUsuario = () => {
     }
   };
 
+  // Atualizado para marcar visualizar junto com adicionar/editar/excluir
   const handleCheckboxChange = (telaNome, acao) => {
-    setPermissoes((prevPermissoes) => ({
-      ...prevPermissoes,
-      [telaNome]: {
-        ...prevPermissoes[telaNome],
-        [acao]: !prevPermissoes[telaNome]?.[acao],
-      },
-    }));
+    setPermissoes((prev) => {
+      const telaPermissoes = prev[telaNome] || {};
+      const novoValor = !telaPermissoes[acao];
+
+      const novasPermissoes = {
+        ...prev,
+        [telaNome]: {
+          ...telaPermissoes,
+          [acao]: novoValor,
+        },
+      };
+
+      if (
+        novoValor &&
+        (acao === "adicionar" || acao === "editar" || acao === "excluir")
+      ) {
+        novasPermissoes[telaNome]["visualizar"] = true;
+      }
+
+      // Se quiser desmarcar visualizar automaticamente quando todas as três forem desmarcadas,
+      // descomente abaixo:
+      /*
+      if (
+        !novoValor &&
+        (acao === "adicionar" || acao === "editar" || acao === "excluir")
+      ) {
+        const nenhumMarcado =
+          !novasPermissoes[telaNome]["adicionar"] &&
+          !novasPermissoes[telaNome]["editar"] &&
+          !novasPermissoes[telaNome]["excluir"];
+        if (nenhumMarcado) {
+          novasPermissoes[telaNome]["visualizar"] = false;
+        }
+      }
+      */
+
+      return novasPermissoes;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -238,20 +266,18 @@ const EditUsuario = () => {
     if (!token) return;
 
     try {
-      // Atualiza dados do usuário
       let updateResponse;
 
       if (isEntregador) {
-
         updateResponse = await axios.put(
           `http://localhost:8080/entregador/alterar/${id}`,
           {
             nomeUsuario: nome,
             emailUsuario: email,
             telefoneUsuario: telefone,
-            login: login,
-            cnh: cnh,
-            isAdm: adminChecked
+            login,
+            cnh,
+            isAdm: adminChecked,
           },
           getRequestConfig()
         );
@@ -262,14 +288,12 @@ const EditUsuario = () => {
             nomeUsuario: nome,
             emailUsuario: email,
             telefoneUsuario: telefone,
-            login: login,
+            login,
             isAdm: adminChecked,
           },
           getRequestConfig()
         );
       }
-
-
 
       if (updateResponse.status === 200) {
         // Apaga permissões antigas
@@ -278,7 +302,6 @@ const EditUsuario = () => {
         const usuarioId = updateResponse.data.idUsuario;
         const permissaoRequests = [];
 
-        // Envia permissões atualizadas
         for (const [nomeTela, permissoesTela] of Object.entries(permissoes)) {
           const telaId = telas.find((t) => t.nomeTela === nomeTela)?.idTela;
           if (!telaId) continue;

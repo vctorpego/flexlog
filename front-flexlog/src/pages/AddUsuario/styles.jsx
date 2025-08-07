@@ -102,7 +102,7 @@ export const Checkbox = styled.input`
   transform: scale(1.2);
   cursor: pointer;
 `;
-
+  
 export const PermissoesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;

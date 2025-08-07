@@ -26,39 +26,38 @@ const Sidebar = ({ isCollapsed, onToggleSidebar }) => {
     const telaPermissoes = permissoes.find(p => p.tela === tela);
     return telaPermissoes ? telaPermissoes.permissoes.includes(acao) : false;
   };
-
   useEffect(() => {
     const fetchDados = async () => {
       setCarregando(true);
       const token = localStorage.getItem("token");
-
+  
       if (!token) {
         setIsLoggedIn(false);
         setCarregando(false);
         return;
       }
-
+  
       try {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken?.sub;
-
+  
         if (!userId) {
           setIsLoggedIn(false);
           return;
         }
-
+  
         const responseUser = await api.get(`/usuario/id/${userId}`);
         const user = responseUser.data;
         setUsuario(user);
-
+  
         const responsePermissoes = await api.get(`/permissao/telas/${user}`);
         setPermissoes(responsePermissoes.data);
-
+  
         const logadoResponse = await api.get(`/usuario/${user}`);
         setUsuario(logadoResponse.data);
-
+  
         setIsLoggedIn(true);
-
+  
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
         setPermissoes([]);
@@ -67,9 +66,10 @@ const Sidebar = ({ isCollapsed, onToggleSidebar }) => {
         setCarregando(false);
       }
     };
-
+  
     fetchDados();
-  }, [navigate]);
+  }, []); // <- Executa apenas uma vez quando o componente monta
+  
 
   const logout = () => {
     signout();

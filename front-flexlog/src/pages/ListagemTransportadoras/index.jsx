@@ -162,7 +162,7 @@ const ListagemTransportadoras = () => {
       <C.Content>
         <C.Title>Lista de Transportadoras</C.Title>
 
-        <SearchBar input={searchQuery} setInput={setSearchQuery} />
+        <SearchBar input={searchQuery} setInput={setSearchQuery} msg={"Digite o nome social"}/>
 
         {permissoesTelaAtual.includes("POST") && (
             <AddButton onClick={handleAddTransportadora}>

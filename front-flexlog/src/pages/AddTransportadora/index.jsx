@@ -62,6 +62,31 @@ const AddTransportadora = () => {
     checkPermission();
   }, [navigate]);
 
+  const handleCepBlur = async () => {
+    if (cep.length !== 8) {
+      alert("CEP inválido. Deve conter 8 dígitos.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = response.data;
+
+      if (data.erro) {
+        alert("CEP não encontrado.");
+        return;
+      }
+
+      setLogradouro(data.logradouro || "");
+      setBairro(data.bairro || "");
+      setCidade(data.localidade || "");
+      setEstado(data.uf || "");
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      alert("Erro ao buscar informações do CEP.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,6 +145,13 @@ const AddTransportadora = () => {
           />
           <C.Input
             type="text"
+            placeholder="CEP"
+            value={cep}
+            onChange={(e) => setCep(e.target.value)}
+            onBlur={handleCepBlur}
+          />
+          <C.Input
+            type="text"
             placeholder="Logradouro"
             value={logradouro}
             onChange={(e) => setLogradouro(e.target.value)}
@@ -154,12 +186,7 @@ const AddTransportadora = () => {
             value={estado}
             onChange={(e) => setEstado(e.target.value)}
           />
-          <C.Input
-            type="text"
-            placeholder="CEP"
-            value={cep}
-            onChange={(e) => setCep(e.target.value)}
-          />
+
           <C.Button type="submit">Adicionar Transportadora</C.Button>
         </C.Form>
       )}

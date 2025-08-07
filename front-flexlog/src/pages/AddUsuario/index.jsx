@@ -26,20 +26,12 @@ const AddUsuario = () => {
   const [adminChecked, setAdminChecked] = useState(false);
   const navigate = useNavigate();
 
-  const acoes = {
-    adicionar: 1,
-    editar: 2,
-    excluir: 3,
-    visualizar: 4,
-  };
-
   const getToken = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/auth/login");
       return null;
     }
-
     try {
       const decoded = jwt_decode(token);
       if (decoded.exp < Date.now() / 1000) {
@@ -121,6 +113,20 @@ const AddUsuario = () => {
     fetchData();
   }, [navigate]);
 
+  useEffect(() => {
+    setPermissoes((prevPermissoes) => {
+      const novaPermissao = { ...prevPermissoes };
+
+      if (novaPermissao["Tela de Meus Pacotes"]) {
+        Object.keys(acoes).forEach((acao) => {
+          novaPermissao["Tela de Meus Pacotes"][acao] = isEntregador;
+        });
+      }
+
+      return novaPermissao;
+    });
+  }, [isEntregador]);
+
   const toggleAllCheckboxes = (checked) => {
     const novaPermissao = {};
     const todasTelas = telas
@@ -144,14 +150,30 @@ const AddUsuario = () => {
     toggleAllCheckboxes(novoValor);
   };
 
+  // Atualizado para marcar visualizar junto com adicionar/editar/excluir
   const handleCheckboxChange = (telaNome, acao) => {
-    setPermissoes((prev) => ({
-      ...prev,
-      [telaNome]: {
-        ...prev[telaNome],
-        [acao]: !prev[telaNome]?.[acao],
-      },
-    }));
+    setPermissoes((prev) => {
+      const telaPermissoes = prev[telaNome] || {};
+      const novoValor = !telaPermissoes[acao];
+
+      const novasPermissoes = {
+        ...prev,
+        [telaNome]: {
+          ...telaPermissoes,
+          [acao]: novoValor,
+        },
+      };
+
+      if (
+        novoValor &&
+        (acao === "adicionar" || acao === "editar" || acao === "excluir")
+      ) {
+        novasPermissoes[telaNome]["visualizar"] = true;
+      }
+
+
+      return novasPermissoes;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -239,18 +261,36 @@ const AddUsuario = () => {
     <C.Container>
       <C.Title>Adicionar Usuário</C.Title>
       <C.Form onSubmit={handleSubmit}>
-        <C.Input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-        <C.Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <C.Input type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-        <C.Input type="text" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-        <C.Input type="text" placeholder="Login" value={login} onChange={(e) => setLogin(e.target.value)} />
-
-        <C.CheckboxContainer>
-          <label>
-            <input type="checkbox" checked={isEntregador} onChange={(e) => setIsEntregador(e.target.checked)} />
-            Entregador
-          </label>
-        </C.CheckboxContainer>
+        <C.Input
+          type="text"
+          placeholder="Nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+        />
+        <C.Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <C.Input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+        <C.Input
+          type="text"
+          placeholder="Telefone"
+          value={telefone}
+          onChange={(e) => setTelefone(e.target.value)}
+        />
+        <C.Input
+          type="text"
+          placeholder="Login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+        />
 
         <C.Input
           type="text"
@@ -260,31 +300,47 @@ const AddUsuario = () => {
           disabled={!isEntregador}
           required={isEntregador}
         />
+        <C.CheckboxContainer>
+          <label>
+            <input
+              type="checkbox"
+              checked={isEntregador}
+              onChange={(e) => setIsEntregador(e.target.checked)}
+            />
+            Entregador
+          </label>
+        </C.CheckboxContainer>
 
         {isSuperAdm && (
           <C.CheckboxContainer>
             <label>
-              <input type="checkbox" checked={adminChecked} onChange={handleAdminCheckboxChange} />
+              <input
+                type="checkbox"
+                checked={adminChecked}
+                onChange={handleAdminCheckboxChange}
+              />
               Administrador
             </label>
           </C.CheckboxContainer>
         )}
 
-        {telas.filter((tela) => tela.nomeTela !== "Tela de Tela").map((tela) => (
-          <C.CheckboxContainer key={tela.idTela}>
-            <strong>{tela.nomeTela}</strong>
-            {Object.keys(acoes).map((acao) => (
-              <label key={acao}>
-                <input
-                  type="checkbox"
-                  checked={permissoes[tela.nomeTela]?.[acao] || false}
-                  onChange={() => handleCheckboxChange(tela.nomeTela, acao)}
-                />
-                {acao}
-              </label>
-            ))}
-          </C.CheckboxContainer>
-        ))}
+        {telas
+          .filter((tela) => tela.nomeTela !== "Tela de Tela")
+          .map((tela) => (
+            <C.CheckboxContainer key={tela.idTela}>
+              <strong>{tela.nomeTela}</strong>
+              {Object.keys(acoes).map((acao) => (
+                <label key={acao}>
+                  <input
+                    type="checkbox"
+                    checked={permissoes[tela.nomeTela]?.[acao] || false}
+                    onChange={() => handleCheckboxChange(tela.nomeTela, acao)}
+                  />
+                  {acao}
+                </label>
+              ))}
+            </C.CheckboxContainer>
+          ))}
 
         <C.Button type="submit">Adicionar Usuário</C.Button>
       </C.Form>

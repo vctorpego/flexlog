@@ -15,6 +15,13 @@ const NaoAutorizado = lazy(() => import("../pages/NaoAutorizado"));
 const CadastroTela = lazy(() => import("../pages/CadastroTela"));
 const ListTransp = lazy(() => import("../pages/ListagemTransportadoras"));
 const AddTransp = lazy(() => import("../pages/AddTransportadora"));
+const Entrada = lazy(() => import("../pages/Entrada"));
+const Saida = lazy(() => import("../pages/Saida"));
+const ListPacotes = lazy(() => import("../pages/ListagemPacotes"));
+const MeusPacotes = lazy(() => import("../pages/MeusPacotes"));
+const TentativaEntrega = lazy(() => import("../pages/TentativaEntrega"));
+const Rollback = lazy(() => import("../pages/Rollback"));
+
 
 
 
@@ -106,6 +113,79 @@ const RoutesApp = () => {
             />
 
             <Route
+              path="/entrada"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Entrada">
+                      <Entrada />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/saida/:idPacote"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Entrada">
+                      <Saida />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tentativa-entrega/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Meus Pacotes">
+                      <TentativaEntrega />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pacotes"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Entrada">
+                      <ListPacotes />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/meus-pacotes"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Meus Pacotes">
+                      <MeusPacotes />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rollback"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PermissaoRoute tela="Tela de Rollback">
+                      <Rollback />
+                    </PermissaoRoute>
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="/transportadoras"
               element={
                 <ProtectedRoute>
@@ -129,7 +209,7 @@ const RoutesApp = () => {
                 </ProtectedRoute>
               }
             />
-                        <Route
+            <Route
               path="/transportadoras/editar/:id"
               element={
                 <ProtectedRoute>
