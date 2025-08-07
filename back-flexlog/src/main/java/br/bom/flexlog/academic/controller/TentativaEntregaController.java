@@ -18,26 +18,23 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/tentativa-entrega")
 public class TentativaEntregaController {
 
-    @Autowired
-    private TentativaEntregaRepository tentativaEntregaRepository;
-
-    @Autowired
-    private PacoteRepository pacoteRepository;
-
-    @Autowired
-    private EntregadorRepository entregadorRepository;
 
     @Autowired
     private TentativaEntregaService tentativaEntregaService;
 
     @PostMapping("/{idPacote}")
-    public ResponseEntity<?> criarTentativaEntrega(
-            @PathVariable int idPacote,
-            @RequestBody TentativaEntregaDTO dto) {
+    public ResponseEntity<?> criarTentativaEntrega(@RequestBody TentativaEntregaDTO dto) {
+        TentativaEntrega tentativa = tentativaEntregaService.criarTentativaEntrega(dto);
 
-        TentativaEntrega tentativaSalva = tentativaEntregaService.criarTentativaEntrega(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tentativaSalva);
+        if (tentativa == null) {
+            // Tentativa duplicada no mesmo dia
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Já existe uma tentativa de entrega com mesmo pacote, status e data.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(tentativa);
     }
+
 
 }
 

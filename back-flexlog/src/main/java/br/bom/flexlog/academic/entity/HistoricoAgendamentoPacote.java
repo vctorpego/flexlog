@@ -18,11 +18,11 @@ public class HistoricoAgendamentoPacote implements Serializable {
     private Date dtModificacao;
 
     @Column
-    private LocalDateTime agendamento;
+    private LocalDateTime agendamento_dt_hr;
 
-    public HistoricoAgendamentoPacote(Pacote pacote, StatusAgendamento status, Date dtModificacao, LocalDateTime agendamento) {
+    public HistoricoAgendamentoPacote(Pacote pacote, StatusAgendamento status, Date dtModificacao, LocalDateTime agendamento_dt_hr) {
         this.dtModificacao = dtModificacao;
-        this.agendamento = agendamento;
+        this.agendamento_dt_hr = agendamento_dt_hr;
     }
     public HistoricoAgendamentoPacote() {
 
@@ -45,10 +45,10 @@ public class HistoricoAgendamentoPacote implements Serializable {
     }
 
     public LocalDateTime getAgendamento() {
-        return agendamento;
+        return agendamento_dt_hr;
     }
 
     public void setAgendamento(LocalDateTime agendamento) {
-        this.agendamento = agendamento;
+        this.agendamento_dt_hr = agendamento;
     }
 }

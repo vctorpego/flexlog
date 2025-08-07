@@ -1,8 +1,10 @@
 package br.bom.flexlog.academic.controller;
 
 import br.bom.flexlog.academic.dto.PacoteDTO;
+import br.bom.flexlog.academic.dto.PacoteRollbackDTO;
 import br.bom.flexlog.academic.dto.PacoteSaidaDTO;
 import br.bom.flexlog.academic.exeptions.ConflictExeption;
+import br.bom.flexlog.academic.exeptions.NotFoundExeption;
 import br.bom.flexlog.academic.service.PacoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,34 @@ public class PacoteController {
         return pacoteService.ListarTodos();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<PacoteDTO> buscarPorId(@PathVariable Integer id) {
-        PacoteDTO pacote = pacoteService.buscarPorId(id);
-        return pacote != null ? ResponseEntity.ok(pacote) : ResponseEntity.notFound().build();
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        try {
+            PacoteDTO pacote = pacoteService.buscarPorId(id);
+            return ResponseEntity.ok(pacote);
+        } catch (NotFoundExeption e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+        return ResponseEntity.badRequest().body("Erro ao carregar pacote: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/codigo/{codigoRastreio}")
+    public ResponseEntity<?> buscarPorCodigoRastreio(@PathVariable String codigoRastreio) {
+        try {
+            PacoteDTO pacote = pacoteService.buscarporCodigoRastreio(codigoRastreio);
+            return ResponseEntity.ok(pacote);
+        } catch (NotFoundExeption e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao carregar pacote: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/rollback")
+    public ResponseEntity<List<PacoteRollbackDTO>> getPacotesComFalhaEntregaAindaComEntregador() {
+        List<PacoteRollbackDTO> pacotesDTO = pacoteService.listarPacotesComFalhaEntregaAindaComEntregador();
+        return ResponseEntity.ok(pacotesDTO);
     }
 
     @PostMapping
@@ -34,10 +61,10 @@ public class PacoteController {
         try {
             PacoteDTO pacoteSalvo = pacoteService.inserir(dto);
             return ResponseEntity.ok(pacoteSalvo);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (ConflictExeption e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body("Erro ao efetuar entrada: " + e.getMessage());
         }
     }
 
@@ -52,6 +79,16 @@ public class PacoteController {
             return ResponseEntity.badRequest().body("Erro ao efetuar saída: " + e.getMessage());
         }
     }
+
+    @PutMapping("/rollback/{idPacote}")
+    public ResponseEntity<Void> rollbackEntrega(
+            @PathVariable int idPacote) {
+
+        pacoteService.rollbackEntrega(idPacote);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 
 

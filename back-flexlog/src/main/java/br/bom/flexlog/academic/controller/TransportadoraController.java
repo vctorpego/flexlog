@@ -1,6 +1,7 @@
 package br.bom.flexlog.academic.controller;
 
 import br.bom.flexlog.academic.dto.TransportadoraDTO;
+import br.bom.flexlog.academic.dto.TransportadoraLiteDTO;
 import br.bom.flexlog.academic.exeptions.CnpjDuplicadoException;
 import br.bom.flexlog.academic.service.TransportadoraService;
 import org.springframework.beans.factory.annotation.Autowired;

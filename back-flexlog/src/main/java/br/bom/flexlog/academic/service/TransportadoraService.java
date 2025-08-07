@@ -2,6 +2,7 @@ package br.bom.flexlog.academic.service;
 
 
 import br.bom.flexlog.academic.dto.TransportadoraDTO;
+import br.bom.flexlog.academic.dto.TransportadoraLiteDTO;
 import br.bom.flexlog.academic.entity.Transportadora;
 import br.bom.flexlog.academic.exeptions.CnpjDuplicadoException;
 import br.bom.flexlog.academic.repository.TransportadoraRepository;

@@ -17,7 +17,7 @@ public class Pacote implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPacote;
 
-    @Column(nullable = false)
+    @Column(unique = true,nullable = false)
     private String codigoRastreio;
 
     @Column(nullable = false)

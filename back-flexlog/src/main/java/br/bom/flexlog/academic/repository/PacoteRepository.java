@@ -14,9 +14,18 @@ public interface PacoteRepository extends JpaRepository<Pacote, Integer> {
     @Query("SELECT p FROM Pacote p WHERE p.entregador.id = :idEntregador " +
             "AND p.idPacote NOT IN (" +
             "   SELECT h.id.pacote.idPacote FROM HistoricoStatusPacote h " +
-            "   WHERE h.id.status.idStatusPacote = 3" +
+            "   WHERE h.id.status.idStatusPacote IN (3, 4)" +
             ")")
     List<Pacote> findPacotesNaoEntreguesPorEntregador(@Param("idEntregador") int idEntregador);
 
-    boolean existsByCodigoRastreio(String codigoRastreio);
+    @Query("SELECT p FROM Pacote p " +
+            "WHERE p.entregador IS NOT NULL " +
+            "AND p.ultimoStatus.idStatusPacote = 4")
+    List<Pacote> findPacotesComFalhaEntregaAindaComEntregador();
+
+
+
+    @Query("SELECT p FROM Pacote p WHERE p.codigoRastreio = :codigoRastreio ")
+    Pacote findCodigoRastreio(String codigoRastreio);
+    
 }

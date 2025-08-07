@@ -2,6 +2,8 @@ package br.bom.flexlog.academic.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Arrays;
+
 public class TentativaEntregaDTO {
     private String recebedor;
     private String statusEntrega;
@@ -34,6 +36,18 @@ public class TentativaEntregaDTO {
 
     public void setIdEntregador(int idEntregador) {
         this.idEntregador = idEntregador;
+    }
+
+    @Override
+    public String toString() {
+        return "TentativaEntregaDTO{" +
+                "recebedor='" + recebedor + '\'' +
+                ", statusEntrega='" + statusEntrega + '\'' +
+                ", falhaEntrega='" + falhaEntrega + '\'' +
+                ", assinaturaRecebedor=" + Arrays.toString(assinaturaRecebedor) +
+                ", idEntregador=" + idEntregador +
+                ", idPacote=" + idPacote +
+                '}';
     }
 
     public byte[] getAssinaturaRecebedor() {

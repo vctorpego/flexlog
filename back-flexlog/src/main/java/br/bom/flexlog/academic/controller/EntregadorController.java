@@ -23,11 +23,13 @@ public class EntregadorController {
     @Autowired
     private  PacoteRepository pacoteRepository;
 
-    @GetMapping("/pacotes/{id}")
-    public ResponseEntity<List<Pacote>> listarPacotesNaoEntregues(@PathVariable int id) {
-        List<Pacote> pacotes = pacoteRepository.findPacotesNaoEntreguesPorEntregador(id);
+    @GetMapping("/pacotes/{idUsuario}")
+    public ResponseEntity<List<Pacote>> listarPacotesNaoEntregues(@PathVariable int idUsuario) {
+        List<Pacote> pacotes = pacoteRepository.findPacotesNaoEntreguesPorEntregador(idUsuario);
         return ResponseEntity.ok(pacotes);
     }
+
+
 
     @GetMapping
     public List<EntregadorDTO> listarTodos(){

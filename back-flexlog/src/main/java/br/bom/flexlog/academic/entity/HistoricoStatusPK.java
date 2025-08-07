@@ -1,13 +1,13 @@
 package br.bom.flexlog.academic.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -24,13 +24,19 @@ public class HistoricoStatusPK implements Serializable {
     @JsonBackReference
     private StatusPacote status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    private Date dataStatus;
+
 
 
     public HistoricoStatusPK() {}
 
-    public HistoricoStatusPK(Pacote pacote, StatusPacote status) {
+    public HistoricoStatusPK(Pacote pacote, StatusPacote status, Date dataStatus) {
         this.pacote = pacote;
         this.status = status;
+        this.dataStatus = dataStatus;
+
     }
     @JsonIgnore
     public Pacote getPacote() {
@@ -41,17 +47,18 @@ public class HistoricoStatusPK implements Serializable {
         this.pacote = pacote;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HistoricoStatusPK that = (HistoricoStatusPK) o;
-        return Objects.equals(pacote, that.pacote) && Objects.equals(status, that.status);
+        return Objects.equals(pacote, that.pacote) && Objects.equals(status, that.status) && Objects.equals(dataStatus, that.dataStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pacote, status);
+        return Objects.hash(pacote, status, dataStatus);
     }
 
     public StatusPacote getStatusPacote() {
@@ -62,4 +69,20 @@ public class HistoricoStatusPK implements Serializable {
         this.status = status;
     }
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "America/Sao_Paulo")
+    public Date getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(Date dataStatus) {
+        this.dataStatus = dataStatus;
+    }
+
+    public StatusPacote getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusPacote status) {
+        this.status = status;
+    }
 }

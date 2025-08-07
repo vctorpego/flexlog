@@ -23,6 +23,7 @@ public class PacoteDTO {
 
 
 
+
     public PacoteDTO() {
     }
 
@@ -161,4 +162,5 @@ public class PacoteDTO {
     public void setTransportadora(TransportadoraLiteDTO transportadora) {
         this.transportadora = transportadora;
     }
+
 }

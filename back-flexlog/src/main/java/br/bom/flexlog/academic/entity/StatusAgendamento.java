@@ -14,8 +14,7 @@ public class StatusAgendamento implements Serializable {
     private int idStatusAgendamento;
     @Column
     private String nomeAgendamento;
-    @Column
-    private String horarioPrevisto;
+
 
     @OneToMany(mappedBy = "ultimoAgendamento")
     @JsonIgnore
@@ -32,7 +31,7 @@ public class StatusAgendamento implements Serializable {
     public StatusAgendamento(int idStatusAgendamento, String nomeAgendamento, String horarioPrevisto) {
         this.idStatusAgendamento = idStatusAgendamento;
         this.nomeAgendamento = nomeAgendamento;
-        this.horarioPrevisto = horarioPrevisto;
+
     }
 
     public StatusAgendamento() {
@@ -59,11 +58,5 @@ public class StatusAgendamento implements Serializable {
         this.nomeAgendamento = nomeAgendamento;
     }
 
-    public String getHorarioPrevisto() {
-        return horarioPrevisto;
-    }
 
-    public void setHorarioPrevisto(String horarioPrevisto) {
-        this.horarioPrevisto = horarioPrevisto;
-    }
 }

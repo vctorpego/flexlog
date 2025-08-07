@@ -39,9 +39,9 @@ public class DataInicializer implements CommandLineRunner {
             telaRepository.save(new Tela("Tela de Transportadoras", "/transportadoras"));
             telaRepository.save(new Tela("Tela de Pacotes", "/pacotes"));
             telaRepository.save(new Tela("Tela de Meus Pacotes", "/meus-pacotes"));
-
-
+            telaRepository.save(new Tela("Tela de Rollback", "/rollback"));
             telaRepository.save(new Tela("Tela de Tela", "/telas"));
+
         } else {
             System.out.println("-> Telas já existem");
         }
@@ -51,6 +51,7 @@ public class DataInicializer implements CommandLineRunner {
             statusPacoteRepository.save(new StatusPacote("Saiu para entrega"));
             statusPacoteRepository.save(new StatusPacote("Entregue com sucesso"));
             statusPacoteRepository.save(new StatusPacote("Tentativa de entrega com falha"));
+            statusPacoteRepository.save(new StatusPacote("Retornou ao centro logistico"));
         }else{
             System.out.println("-> Status já existem");
 
@@ -59,8 +60,6 @@ public class DataInicializer implements CommandLineRunner {
             System.out.println("-> Inserindo  Status de Agendamentos");
             statusAgendamentoRepository.save(new StatusAgendamento("Aguardando Agendamento"));
             statusAgendamentoRepository.save(new StatusAgendamento("Agendado"));
-            statusAgendamentoRepository.save(new StatusAgendamento("Aguardando Reagendamento"));
-            statusAgendamentoRepository.save(new StatusAgendamento("Reagendado"));
             statusAgendamentoRepository.save(new StatusAgendamento("Agendado para Hoje"));
 
 
