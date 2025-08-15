@@ -58,7 +58,7 @@ export const MenuItem = styled.div`
   align-items: center;
   padding: 13px;
   color: #2283C8;
-  font-size: ${(props) => (props.collapsed ? "0.8rem" : "18px")};
+  font-size: ${(props) => (props.collapsed ? "0.8rem" : "16px")};
   cursor: pointer;
   background-color: ${(props) =>
     props.isActive && !props.collapsed ? "#B3D7F2" : "transparent"}; 

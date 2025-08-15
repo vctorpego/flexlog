@@ -4,8 +4,9 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import * as C from "./styles";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth"; // Já tem esse hook
+import useAuth from "../../hooks/useAuth";
 import jwtDecode from "jwt-decode";
+import imgLogin from "../../pages/Signin/login.png";
 
 const Signin = () => {
   const { login } = useAuth(); // Obtendo o login do contexto
@@ -81,25 +82,37 @@ const Signin = () => {
   };
 
   return (
-    <C.Container>
-      <C.Label>LOGIN</C.Label>
-      <C.Content>
-        <Input
-          type="text"
-          placeholder="Digite seu Login"
-          value={loginInput}
-          onChange={(e) => [setLogin(e.target.value), setError("")]}
-        />
-        <Input
-          type="password"
-          placeholder="Digite sua Senha"
-          value={senha}
-          onChange={(e) => [setSenha(e.target.value), setError("")]}
-        />
-        {error && <C.labelError>{error}</C.labelError>}
-        <Button Text="Entrar" onClick={handleLogin} />
-      </C.Content>
-    </C.Container>
+    <C.Wrapper>
+      <C.Left>
+        <img src={imgLogin} alt="Login Ilustração" />
+      </C.Left>
+      <C.Right>
+        <C.FormBox>
+          <h2>LOGIN</h2>
+          <div className="inputs">
+            <label htmlFor="usuario">Usuário</label>
+            <C.LoginInput
+              id="usuario"
+              type="text"
+              placeholder="Digite seu usuário"
+              value={loginInput}
+              onChange={(e) => setLogin(e.target.value)}
+            />
+
+            <label htmlFor="senha">Senha</label>
+            <C.LoginInput
+              id="senha"
+              type="password"
+              placeholder="Digite sua senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
+          {error && <C.labelError>{error}</C.labelError>}
+          <Button Text="Entrar" onClick={handleLogin} />
+        </C.FormBox>
+      </C.Right>
+    </C.Wrapper>
   );
 };
 

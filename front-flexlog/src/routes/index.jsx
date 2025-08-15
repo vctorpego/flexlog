@@ -21,9 +21,7 @@ const ListPacotes = lazy(() => import("../pages/ListagemPacotes"));
 const MeusPacotes = lazy(() => import("../pages/MeusPacotes"));
 const TentativaEntrega = lazy(() => import("../pages/TentativaEntrega"));
 const Rollback = lazy(() => import("../pages/Rollback"));
-
-
-
+import FazerAgendamento from "../pages/FazerAgendamento";
 
 import PermissaoRoute from "./PermissaoRoute";
 
@@ -222,18 +220,29 @@ const RoutesApp = () => {
               }
             />
 
-
             <Route
-              path="/telas"
+              path="/fazer-agendamento"
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <CadastroTela />
+
+                    <FazerAgendamento />
+
                   </Layout>
                 </ProtectedRoute>
               }
             />
 
+            <Route
+              path="/fazer-agendamento"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <FazerAgendamento />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             {/* Rota fallback */}
             <Route
               path="*"
