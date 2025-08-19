@@ -225,19 +225,6 @@ const RoutesApp = () => {
               element={
                 <ProtectedRoute>
                   <Layout>
-
-                    <FazerAgendamento />
-
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/fazer-agendamento"
-              element={
-                <ProtectedRoute>
-                  <Layout>
                     <FazerAgendamento />
                   </Layout>
                 </ProtectedRoute>
