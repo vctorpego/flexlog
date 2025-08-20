@@ -85,7 +85,9 @@ public class DataInicializer implements CommandLineRunner {
             // Criptografar a senha usando BCryptPasswordEncoder
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String senhaCriptografada = passwordEncoder.encode("superadmin");
+            String senhaServicoAI = passwordEncoder.encode("servicoia");
             Usuario superAdmin = new Usuario();
+            Usuario servicoAI = new Usuario();
             superAdmin.setNomeUsuario("Paulo Henrique");
             superAdmin.setLogin("superadmin");
             superAdmin.setSenhaUsuario(senhaCriptografada);
@@ -94,6 +96,17 @@ public class DataInicializer implements CommandLineRunner {
             superAdmin.setIsAdm(true);
             superAdmin.setIsSuperAdm(true);
             superAdmin = usuarioRepository.save(superAdmin); // <- salva e obtém a instância gerenciada
+            servicoAI.setNomeUsuario("Servico de IA");
+            servicoAI.setLogin("servicoia");
+            servicoAI.setSenhaUsuario(senhaServicoAI);
+            servicoAI.setEmailUsuario("servicoIA@flexlog.com");
+            servicoAI.setTelefoneUsuario("Serviço de IA");
+            servicoAI.setIsAdm(false);
+            servicoAI.setIsSuperAdm(false);
+            usuarioRepository.save(servicoAI);
+
+
+
 
             List<Tela> telas = telaRepository.findAll();
             List<Permissao> permissoes = permissaoRepository.findAllByOrderByIdPermisaoAsc();
