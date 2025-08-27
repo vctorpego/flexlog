@@ -1,110 +1,259 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #f4f4f4;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+`;
+
+export const BackButton = styled.button`
+  position: fixed;
+  top: 30px;
+  left: 220px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 90vh;
-  width: 100%;
-  max-width: 900px; /* limite razoável para formulários */
-  text-align: center;
-  flex-direction: column;
-  padding: 20px;
-  margin: 0 auto; /* centraliza no pai */
-  box-sizing: border-box;
-  border-radius: 8px;
-`;
-
-export const Title = styled.h2`
-  font-size: 28px;
-  color: #003366; /* azul escuro */
-  margin-bottom: 24px;
-`;
-
-export const Form = styled.form`
-  background-color: white;
-  padding: 30px 40px;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-`;
-
-export const InputGroup = styled.div`
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-`;
-
-export const Label = styled.label`
-  display: block;
-  margin-bottom: 6px;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 16px;
   font-weight: 600;
-  color: #004080;
-  text-align: left;
-`;
+  cursor: pointer;
+  transition: color 0.3s;
 
-export const InputWrapper = styled.div`
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  flex-direction: column;
-`;
+  &:hover {
+    color: #007bff;
+  }
 
-export const Input = styled.input`
-  padding: 12px;
-  border: 1.5px solid #a0bce6;
-  border-radius: 6px;
-  font-size: 1rem;
-  width: 100%;
-  transition: border-color 0.2s ease;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
+  @media (max-width: 768px) {
+    position: static;
+    margin-bottom: 20px;
+    left: auto;
   }
 `;
 
 export const Button = styled.button`
-  padding: 14px;
-  background-color: #007bff;  /* azul padrão */
-  color: white;
+  background-color: #007bff; // cor de fundo
+  color: #fff;               // cor do texto
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  font-size: 17px;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 
   &:hover {
-    background-color: #0056b3;  /* azul mais escuro no hover */
+    background-color: #0056b3;
   }
 `;
 
-export const CheckboxContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 10px;
+export const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
 `;
 
-export const CheckboxLabel = styled.label`
+export const Form = styled.form`
   display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #003366;
-  font-weight: 500;
+  flex-direction: column;
+  gap: 30px;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @media (max-width: 900px) {
+    padding: 25px 20px;
+  }
 `;
 
-export const Checkbox = styled.input`
-  transform: scale(1.2);
-  cursor: pointer;
-`;
-  
-export const PermissoesContainer = styled.div`
+export const InputsRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(${props => props.columns}, 1fr);
   gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Label = styled.label`
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 0.95rem;
+`;
+
+export const Input = styled.input`
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+  }
+`;
+
+export const AdminCheckbox = styled.div`
+  margin-top: 5px;
+
+  label {
+    font-weight: 600;
+    color: #007bff;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+      margin-right: 8px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+  }
+`;
+
+export const PermissionsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #222;
+    font-size: 1.6rem;
+  }
+`;
+
+export const CardsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const Card = styled.div`
+  background: #fafafa;
+  padding: 20px 18px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  }
+`;
+
+export const CardTitle = styled.h4`
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.15rem;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+`;
+
+export const PermissionsList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const PermissionItem = styled.li`
+  margin-bottom: 10px;
+
+  label {
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    input {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+  }
+`;
+
+export const AddButtonWrapper = styled.div`
+  width: 180px;
+  align-self: center;
+
+  button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 14px;
+    background-color: #007bff; // já tem
+    color: #fff;               // adiciona isso
+    font-weight: bold;         // opcional, deixa o texto mais destacado
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 160px;
+  }
+`;
+
+export const Message = styled.div`
+  width: 100%;
+  max-width: 500px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+
+  ${({ type }) => type === 'error' && css`
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+  `}
+
+  ${({ type }) => type === 'success' && css`
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+  `}
+
+  ${({ type }) => type === 'info' && css`
+    background-color: #cff4fc;
+    color: #055160;
+    border: 1px solid #b6effb;
+  `}
 `;

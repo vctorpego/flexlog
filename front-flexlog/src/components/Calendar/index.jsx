@@ -11,7 +11,7 @@ import {
 import Cell from "../Cell";
 import { CalendarWrapper, CalendarGrid, MonthTitle } from "./styles";
 
-const weeks = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const weeks = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
 
 const Calendar = ({ value = new Date(), onChange = () => {} }) => {
   const start = startOfMonth(value);

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import Button from "../../components/Button";
 import * as C from "./styles";
 
 const acoes = {
@@ -24,6 +26,7 @@ const AddUsuario = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [isSuperAdm, setIsSuperAdm] = useState(false);
   const [adminChecked, setAdminChecked] = useState(false);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const getToken = () => {
@@ -259,90 +262,97 @@ const AddUsuario = () => {
 
   return (
     <C.Container>
-      <C.Title>Adicionar Usuário</C.Title>
-      <C.Form onSubmit={handleSubmit}>
-        <C.Input
-          type="text"
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-        <C.Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <C.Input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-        <C.Input
-          type="text"
-          placeholder="Telefone"
-          value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
-        />
-        <C.Input
-          type="text"
-          placeholder="Login"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-        />
 
-        <C.Input
-          type="text"
-          placeholder="CNH"
-          value={cnh}
-          onChange={(e) => setCnh(e.target.value)}
-          disabled={!isEntregador}
-          required={isEntregador}
-        />
-        <C.CheckboxContainer>
-          <label>
-            <input
-              type="checkbox"
-              checked={isEntregador}
-              onChange={(e) => setIsEntregador(e.target.checked)}
+      <C.Title>Adicionar Usuário</C.Title>
+
+      {message && <C.Message type={messageType}>{message}</C.Message>}
+
+      <C.Form onSubmit={handleSubmit}>
+        <C.InputsRow columns={2}>
+          <C.InputGroup>
+            <C.Label>Nome</C.Label>
+            <C.Input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Nome completo" />
+          </C.InputGroup>
+          <C.InputGroup>
+            <C.Label>Email</C.Label>
+            <C.Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
+          </C.InputGroup>
+        </C.InputsRow>
+
+        <C.InputsRow columns={2}>
+          <C.InputGroup>
+            <C.Label>Telefone</C.Label>
+            <C.Input value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(XX) XXXX-XXXX" />
+          </C.InputGroup>
+          <C.InputGroup>
+            <C.Label>CNH</C.Label>
+            <C.Input
+              value={cnh}
+              onChange={(e) => setCnh(e.target.value)}
+              placeholder="CNH"
+              disabled={!isEntregador}
             />
-            Entregador
-          </label>
-        </C.CheckboxContainer>
+          </C.InputGroup>
+        </C.InputsRow>
+
+        <C.InputsRow columns={2}>
+          <C.InputGroup>
+            <C.Label>Login</C.Label>
+            <C.Input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Nome de usuário" />
+          </C.InputGroup>
+          <C.InputGroup>
+            <C.Label>Senha</C.Label>
+            <C.Input value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha segura" type="password" />
+          </C.InputGroup>
+        </C.InputsRow>
+
+        <C.InputGroup>
+          <C.AdminCheckbox>
+            <label>
+              <input type="checkbox" checked={isEntregador} onChange={(e) => setIsEntregador(e.target.checked)} />
+              Entregador
+            </label>
+          </C.AdminCheckbox>
+        </C.InputGroup>
 
         {isSuperAdm && (
-          <C.CheckboxContainer>
+          <C.AdminCheckbox>
             <label>
-              <input
-                type="checkbox"
-                checked={adminChecked}
-                onChange={handleAdminCheckboxChange}
-              />
-              Administrador
+              <input type="checkbox" checked={adminChecked} onChange={handleAdminCheckboxChange} />
+              Administrador (Super Usuário)
             </label>
-          </C.CheckboxContainer>
+          </C.AdminCheckbox>
         )}
 
-        {telas
-          .filter((tela) => tela.nomeTela !== "Tela de Tela")
-          .map((tela) => (
-            <C.CheckboxContainer key={tela.idTela}>
-              <strong>{tela.nomeTela}</strong>
-              {Object.keys(acoes).map((acao) => (
-                <label key={acao}>
-                  <input
-                    type="checkbox"
-                    checked={permissoes[tela.nomeTela]?.[acao] || false}
-                    onChange={() => handleCheckboxChange(tela.nomeTela, acao)}
-                  />
-                  {acao}
-                </label>
-              ))}
-            </C.CheckboxContainer>
-          ))}
+        <C.PermissionsSection>
+          <h3>Permissões</h3>
+          <C.CardsContainer>
+            {telas.map((tela) => (
+              <C.Card key={tela.idTela}>
+                <C.CardTitle>{tela.nomeTela}</C.CardTitle>
+                <C.PermissionsList>
+                  {Object.keys(acoes).map((acao) => (
+                    <C.PermissionItem key={acao}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={permissoes[tela.nomeTela]?.[acao] || false}
+                          onChange={() => handleCheckboxChange(tela.nomeTela, acao)}
+                        />
+                        {acao.charAt(0).toUpperCase() + acao.slice(1)}
+                      </label>
+                    </C.PermissionItem>
+                  ))}
+                </C.PermissionsList>
+              </C.Card>
+            ))}
+          </C.CardsContainer>
+        </C.PermissionsSection>
 
-        <C.Button type="submit">Adicionar Usuário</C.Button>
+        <C.AddButtonWrapper>
+          <C.Button type="submit">Adicionar Usuário</C.Button>
+        </C.AddButtonWrapper>
+
       </C.Form>
     </C.Container>
   );

@@ -28,7 +28,6 @@ const Entrada = () => {
       try {
         const response = await axios.get("http://localhost:8080/transportadora", getRequestConfig());
         setTransportadoras(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Erro ao buscar transportadoras:", error);
         alert("Erro ao carregar transportadoras.");
@@ -59,7 +58,6 @@ const Entrada = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Aqui você pode trocar por PUT caso esteja atualizando um pacote existente
     try {
       const response = await axios.post("http://localhost:8080/pacotes", formData, getRequestConfig());
       if (response.status === 201 || response.status === 200) {
@@ -77,70 +75,85 @@ const Entrada = () => {
     <C.Container>
       <C.Title>Registrar Entrada de Pacote</C.Title>
       <C.Form onSubmit={handleSubmit}>
-        <C.Select
-          name="idTransportadora"
-          value={formData.transportadora.idTransportadora}
-          onChange={handleChange}
-        >
-          <option value="">Selecione a Transportadora</option>
-          {transportadoras.map((t) => (
-            <option key={t.idTransportadora} value={t.idTransportadora}>
-              {t.nomeSocial}
-            </option>
-          ))}
-        </C.Select>
-        <C.Input
-          type="text"
-          name="codigoRastreio"
-          placeholder="Código de Rastreio"
-          value={formData.codigoRastreio}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="destinatario"
-          placeholder="Destinatário"
-          value={formData.destinatario}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="cep"
-          placeholder="CEP"
-          value={formData.cep}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="cidade"
-          placeholder="Cidade"
-          value={formData.cidade}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="bairro"
-          placeholder="Bairro"
-          value={formData.bairro}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="rua"
-          placeholder="Rua"
-          value={formData.rua}
-          onChange={handleChange}
-        />
-        <C.Input
-          type="text"
-          name="numeroEndereco"
-          placeholder="Número"
-          value={formData.numeroEndereco}
-          onChange={handleChange}
-        />
+        <C.FormColumn>
+          <label>Transportadora</label>
+          <C.Select
+            name="idTransportadora"
+            value={formData.transportadora.idTransportadora}
+            onChange={handleChange}
+          >
+            <option value="">Selecione a Transportadora</option>
+            {transportadoras.map((t) => (
+              <option key={t.idTransportadora} value={t.idTransportadora}>
+                {t.nomeSocial}
+              </option>
+            ))}
+          </C.Select>
 
-        <C.Button type="submit">Salvar Entrada</C.Button>
+          <label>Código de Rastreio</label>
+          <C.Input
+            type="text"
+            name="codigoRastreio"
+            value={formData.codigoRastreio}
+            onChange={handleChange}
+          />
+
+          <label>Destinatário</label>
+          <C.Input
+            type="text"
+            name="destinatario"
+            value={formData.destinatario}
+            onChange={handleChange}
+          />
+
+          <label>CEP</label>
+          <C.Input
+            type="text"
+            name="cep"
+            value={formData.cep}
+            onChange={handleChange}
+          />
+        </C.FormColumn>
+
+        <C.FormColumn>
+          <label>Cidade</label>
+          <C.Input
+            type="text"
+            name="cidade"
+            value={formData.cidade}
+            onChange={handleChange}
+          />
+
+          <label>Bairro</label>
+          <C.Input
+            type="text"
+            name="bairro"
+            value={formData.bairro}
+            onChange={handleChange}
+          />
+
+          <label>Rua</label>
+          <C.Input
+            type="text"
+            name="rua"
+            value={formData.rua}
+            onChange={handleChange}
+          />
+
+          <label>Número</label>
+          <C.Input
+            type="text"
+            name="numeroEndereco"
+            value={formData.numeroEndereco}
+            onChange={handleChange}
+          />
+        </C.FormColumn>
+
+        <C.Button type="submit" style={{ gridColumn: "1 / 3" }}>
+          Salvar Entrada
+        </C.Button>
       </C.Form>
+
     </C.Container>
   );
 };

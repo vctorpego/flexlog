@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  max-width: 500px;
+  max-width: 900px;
   margin: 60px auto;
   padding: 30px;
   background: #f9f9f9;
@@ -17,6 +17,12 @@ export const Title = styled.h2`
 `;
 
 export const Form = styled.form`
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* duas colunas */
+  gap: 24px; /* espaço entre colunas */
+`;
+
+export const FormColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
